@@ -1,12 +1,12 @@
 <a name="readme-top"></a>
 
-[![Contributors][contributors-shield]][contributors-url]
+[![Dependency Graph][maven.shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![Apache License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
-
+[![Licence](https://img.shields.io/github/license/XtremeAlex/xtr-aeroport-ms?style=for-the-badge)](./LICENSE)
 
 <!-- PROJECT LOGO -->
 <br />
@@ -285,20 +285,22 @@ s
 L'aiuto di tutti rende la comunità open source un luogo incredibile per imparare, ispirarsi e creare.
 Qualsiasi contributo tu possa fornire è **enormemente apprezzato**.
 
-Se hai un suggerimento che potrebbe migliorare questo progetto, per favore effettua un fork del repository e crea una pull request.  
-Puoi anche semplicemente aprire un problema con il tag "feature".
-Non dimenticare di mettere una stella al progetto!  
+Se hai un suggerimento che potrebbe migliorare questo progetto, per favore effettua un fork del repository e crea una pull request.
+Puoi anche semplicemente aprire un problema con il tag "bug".
+
+Non dimenticare di mettere una stella al progetto!
 Grazie ancora!
 
 
 
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create.  
+Contributions are what make the open source community such an amazing place to learn, inspire, and create.
 Any contributions you make are **greatly appreciated**.
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "feature".
-Don't forget to give the project a star!  
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "bug".
+
+Don't forget to give the project a star!
 Thanks again!
 
 ## Git Command
@@ -398,3 +400,4 @@ Inserisco questi url che potrebbero essere utili:
 [Paypal.url]: https://www.paypal.com
 [Mozilla.shield]: https://img.shields.io/badge/Firefox_Browser-FF7139?style=for-the-badge&logo=Firefox-Browser&logoColor=white
 [Mozilla.url]: https://www.mozilla.org
+[maven.shield]: https://img.shields.io/badge/Apache%20Maven-C71A36?style=for-the-badge&logo=Apache%20Maven&logoColor=white
