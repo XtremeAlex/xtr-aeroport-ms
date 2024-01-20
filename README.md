@@ -1,6 +1,7 @@
 <a name="readme-top"></a>
 
-[![Dependency Graph][maven.shield]][contributors-url]
+[![Contributors][contributors-shield]][contributors-url]
+[![Dependency Graph][maven.shield]][dependencies-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
@@ -356,6 +357,7 @@ Inserisco questi url che potrebbero essere utili:
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/XtremeAlex/xtr-aeroport-ms.svg?style=for-the-badge
 [contributors-url]: https://github.com/XtremeAlex/xtr-aeroport-ms/graphs/contributors
+[dependencies-url]: https://github.com/XtremeAlex/xtr-aeroport-ms/network/dependencies
 [forks-shield]: https://img.shields.io/github/forks/XtremeAlex/xtr-aeroport-ms.svg?style=for-the-badge
 [forks-url]: https://github.com/XtremeAlex/xtr-aeroport-ms/network/members
 [stars-shield]: https://img.shields.io/github/stars/XtremeAlex/xtr-aeroport-ms.svg?style=for-the-badge
