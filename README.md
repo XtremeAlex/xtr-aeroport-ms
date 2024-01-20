@@ -4,15 +4,14 @@
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
-[![Apache License][license-shield]][license-url]
+[![License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
-[![Licence](https://img.shields.io/github/license/XtremeAlex/xtr-aeroport-ms?style=for-the-badge)](./LICENSE)
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
   <a href="">
-    <img src="_assets/images/logo.png" alt="Logo">
+    <img src="_assets/images/logo.png" width="300" alt="Logo">
   </a>
 
   <h3 align="center">Aeroport MS</h3>
