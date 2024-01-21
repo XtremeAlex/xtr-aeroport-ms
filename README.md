@@ -115,6 +115,7 @@ Per utilizzare e contribuire a questo progetto, avrai bisogno di installare:
 
 ```
 .
+├── dir.txt
 ├── main
 │   ├── java
 │   │   └── com
@@ -157,9 +158,9 @@ Per utilizzare e contribuire a questo progetto, avrai bisogno di installare:
 │   │               │   └── view
 │   │               │       └── CountryAirportCountView.java
 │   │               ├── mapper
-│   │               │   ├── IdDecodeConverter.java
-│   │               │   ├── IdEncodeConverter.java
-│   │               │   └── ListIdEncodeConverter.java
+│   │               │   ├── IAirportMapper.java
+│   │               │   ├── IAirportTypeTypologyMapper.java
+│   │               │   └── ICountryTypologyMapper.java
 │   │               ├── repository
 │   │               │   ├── AirportRepository.java
 │   │               │   ├── AirportTypeRepository.java
@@ -178,6 +179,7 @@ Per utilizzare e contribuire a questo progetto, avrai bisogno di installare:
 │   │                       ├── AirportDataService.java
 │   │                       └── CountryService.java
 │   └── resources
+│       ├── META-INF
 │       ├── application.yml
 │       ├── banner.txt
 │       ├── data.sql
@@ -266,7 +268,7 @@ Per utilizzare e contribuire a questo progetto, avrai bisogno di installare:
 
 - [x] Creare Verticale SearchAirport
 - [x] Creare Verticale SearchAirportType
-- [ ] Sostituire MolderMapper con Mapstruct
+- [x] Sostituire MolderMapper con Mapstruct
 - [ ] Compilare Nativamente con Graal
 - [ ] Creare tutti i Dockerfile e Docker-Compose per
     - [ ] Graal JDK17
