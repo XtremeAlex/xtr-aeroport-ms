@@ -10,18 +10,12 @@
     </parent>
     <groupId>com.xtremealex</groupId>
     <artifactId>aeroport</artifactId>
-    <version>0.1</version>
+    <version>0.1.2</version>
     <name>xtr-aeroport-ms</name>
     <description>Demo Aeroport Graal project for Spring Boot</description>
     <properties>
         <java.version>17</java.version>
         <mainClass>com.xtremealex.aeroport.AeroportApplication</mainClass>
-
-        <maven.build.timestamp.format>yyyy.MM.dd_HH.mm</maven.build.timestamp.format>
-        <timestamp>${maven.build.timestamp}</timestamp>
-        <!-- Una chicca, lascio qui magari puo essere utile nel caso in cui volessimo usare la data ${timestamp} come versione del img docker -->
-        <docker.image>artifactory.io/k8s-test/namespace/${project.groupId}/${project.artifactId}:${project.version}
-        </docker.image>
     </properties>
     <dependencies>
 
@@ -35,7 +29,6 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.15.2</version> <!-- Usa l'ultima versione disponibile -->
         </dependency>
-
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -61,7 +54,6 @@
             <version>2.2.224</version>
         </dependency>
 
-
         <!-- https://mvnrepository.com/artifact/org.modelmapper/modelmapper -->
         <dependency>
             <groupId>org.modelmapper</groupId>
@@ -70,249 +62,6 @@
         </dependency>
 
 
-        <!--
-            Per ottimizzare il piu possibile la distribuzione in un ambiente cloud si puo usare questo a differenza del plugin spring boot
-            Riduce le dimensioni del JAR e migliorare le prestazioni dell'applicazione.
-        -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-maven-plugin</artifactId>
-            <version>3.2.1</version>
-        </dependency>
-
-        <!--
-        TODO: Ancora in fase di implementazione
-            https://github.com/apache/maven-dependency-analyzer/tree/master
-            mvn dependency:analyze-unused-dependencies
-            Questo comando analizzerà il pom.xml del progetto e identificherà le dipendenze non utilizzate.
-        -->
-
     </dependencies>
-
-    <build>
-        <plugins>
-
-
-            <!-- Questo plugin è utile per generare automaticamente la documentazione del progetto come parte del processo di build -->
-            <!--
-            <plugin>
-                <groupId>org.asciidoctor</groupId>
-                <artifactId>asciidoctor-maven-plugin</artifactId>
-                <version>2.2.1</version>
-                <executions>
-                    <execution>
-                        <id>generate-docs</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>process-asciidoc</goal>
-                        </goals>
-                        <configuration>
-                            <backend>html</backend>
-                            <doctype>book</doctype>
-                        </configuration>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.springframework.restdocs</groupId>
-                        <artifactId>spring-restdocs-asciidoctor</artifactId>
-                        <version>${spring-restdocs.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            -->
-
-            <!--
-                GRAALVM BUILD TOOLS (genera )
-                 $mvn clean package -Pnative -> ATTENZIONE !!! compilazione nativa detterminata dalla macchina su cui si lancia
-            -->
-            <plugin>
-                <groupId>org.graalvm.buildtools</groupId>
-                <artifactId>native-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>${mainClass}</mainClass>
-                    <buildArgs>
-                        <!--
-                            Per risolvere i problemi di Reflection si consiglia di lanciare prima di qualsiasi compilazione nativa:
-                                java -agentlib:native-image-agent=config-output-dir=./configs/native-image -jar ./target/*.jar
-
-                            Il plugin native-image-agent genera diversi file .json,
-                            ognuno dei quali contiene informazioni specifiche su un aspetto del codice che deve essere compilato.
-
-                        <buildArg>-H:ReflectionConfigurationFiles=configs/native-image/reflect-config.json</buildArg>
-                        <buildArg>-H:JNIConfigurationFiles=configs/native-image/jni-config.json</buildArg>
-                        <buildArg>-H:DynamicProxyConfigurationFiles=configs/native-image/proxy-config.json</buildArg>
-                        <buildArg>-H:ResourceConfigurationFiles=configs/native-image/resource-config.json</buildArg>
-                        <buildArg>-H:SerializationConfigurationFiles=configs/native-image/serialization-config.json</buildArg>
-                        -->
-
-                        <!-- Se si crea una folder sotto resources META-INF.native-image non serve aggiungere i buildArgs -->
-                    </buildArgs>
-
-                    <!-- Per non usare il metodo manuale usare queste configurazione dell agent,
-                     a in caso non puoi modificare i file in caso tu voglia aggiungere delle resource personalizzate
-
-                    <agent>
-                        <enabled>true</enabled>
-                        <defaultMode>Standard</defaultMode>
-                        <options>
-                            <trackReflectionMetadata>true</trackReflectionMetadata>
-                        </options>
-                        <metadataCopy>
-                            <disabledStages>
-                                <stage>true</stage>
-                            </disabledStages>
-                            <merge>true</merge>
-                            <outputDirectory>/tmp/test-output-dir</outputDirectory>
-                        </metadataCopy>
-                    </agent>
-
-                     -->
-
-                </configuration>
-            </plugin>
-
-            <!--
-
-                SPRING BOOT BUILD TOOLS (crea un img docker usando:
-
-                 $mvn spring-boot:build-image -Pnative -> x86
-                 $mvn spring-boot:build-image -Pnative-m1 -> ARM (NON_NATIVA -> AOT è quella nativa)
-
-                 ATTENZIONE, va prima fatta una compilazione nativa locale e poi lanciato il processo AOT
-                 $mvn clean package -Pnative && mvn spring-boot:process-aot -Pnative-m1 -> genera xtr-aeroport-ms/target/aeroport
-
-                Allo stesso modo si potrebbe fare mvn clean package -P native e successivamente lacniare un docker-compose_native_graal17.yml
-
-                OPPURE; si usa il Plugin Spring AOT come sotto nel native-m1-nativo (funziona con tutti le CPU tranquilli)
-
-            -->
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>${mainClass}</mainClass>
-                    <imageName>${docker.image}</imageName>
-                    <createdDate>now</createdDate>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-
-        </plugins>
-    </build>
-
-    <profiles>
-        <profile>
-            <id>native</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.graalvm.buildtools</groupId>
-                        <artifactId>native-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>build-native</id>
-                                <goals>
-                                    <goal>compile-no-fork</goal>
-                                </goals>
-                                <phase>package</phase>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <!-- PROFILE FOR MAC M1 ARM -->
-        <profile>
-            <id>m1-arm</id>
-            <properties>
-                <!-- Salta i test quando questo profilo è attivo, non mi va di aspettare secoli... -->
-                <skipTests>true</skipTests>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-maven-plugin</artifactId>
-                        <configuration>
-                            <mainClass>${mainClass}</mainClass>
-                            <imageName>${docker.image}</imageName>
-                            <createdDate>now</createdDate>
-                            <excludes>
-                                <exclude>
-                                    <groupId>org.projectlombok</groupId>
-                                    <artifactId>lombok</artifactId>
-                                </exclude>
-                            </excludes>
-                            <!--
-                             Sfortunatamente, l'immagine di Packeto Buildpacks predefinita non supporta l'architettura Mac M1;
-                             Questa immagine  risolvere il problema.
-                            -->
-                            <image>
-                                <builder>dashaun/builder:tiny</builder>
-                            </image>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <!-- PROFILE FOR MAC M1 ARM NATIVE E CI SI DIVERTE-->
-        <profile>
-            <id>native-m1-arm</id>
-            <properties>
-                <!-- Salta i test quando questo profilo è attivo, non mi va di aspettare secoli... -->
-                <skipTests>true</skipTests>
-            </properties>
-            <build>
-                <plugins>
-
-                    <plugin>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <!-- Spring AOT per la compilazione AOT -->
-                                    <goal>process-aot</goal>
-                                    <goal>build-image-no-fork</goal>
-
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-
-
-                            <mainClass>${mainClass}</mainClass>
-                            <imageName>${docker.image}</imageName>
-                            <createdDate>now</createdDate>
-                            <excludes>
-                                <exclude>
-                                    <groupId>org.projectlombok</groupId>
-                                    <artifactId>lombok</artifactId>
-                                </exclude>
-                            </excludes>
-                            <!--
-                             Sfortunatamente, l'immagine di Packeto Buildpacks predefinita non supporta l'architettura Mac M1;
-                             Questa immagine  risolvere il problema.
-                            -->
-                            <image>
-                                <builder>dashaun/builder:tiny</builder>
-                            </image>
-                            <!-- Specifica per la build nativa -->
-                            <classifier>exec</classifier>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-    </profiles>
 
 </project>

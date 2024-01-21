@@ -309,7 +309,7 @@ Thanks again!
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/SexToysFeature`)
 3. Commit your Changes (`git commit -m 'Add some SexToysFeature'`)
-4. Push to the Branch (`git push origin feature/SexToysFeature`)se
+4. Push to the Branch (`git push origin feature/SexToysFeature`)
 5. Open a Pull Request
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
