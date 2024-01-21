@@ -3,16 +3,17 @@ package com.xtremealex.aeroport.service.provvisorioBatchInit;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xtremealex.aeroport.common.models.json.AirportJson;
+import com.xtremealex.aeroport.common.models.json.CountryJson;
 import com.xtremealex.aeroport.entity.AirportEntity;
 import com.xtremealex.aeroport.entity.typological.AirportTypeTypology;
 import com.xtremealex.aeroport.entity.typological.CountryTypology;
-import com.xtremealex.aeroport.common.models.json.AirportJson;
-import com.xtremealex.aeroport.common.models.json.CountryJson;
+import com.xtremealex.aeroport.mapper.IAirportMapper;
+import com.xtremealex.aeroport.mapper.ICountryTypologyMapper;
 import com.xtremealex.aeroport.repository.AirportRepository;
 import com.xtremealex.aeroport.repository.AirportTypeRepository;
 import com.xtremealex.aeroport.repository.CountryTypeRepository;
 import jakarta.annotation.PostConstruct;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,8 +42,6 @@ public class AirportDataService {
     @Autowired
     private CountryService countryService;
 
-    @Autowired
-    private ModelMapper modelMapper;
 
     @PostConstruct
     public void init() throws IOException {
@@ -67,13 +66,9 @@ public class AirportDataService {
 
         // Non voglio lavorare direttamente sulle Entity in quanto queste magari li do al FE/REST se cambia la futura stuttura del JSON in input sono costretto a modificare gran parte del codice, preferisco lascialro modulare
         // Con Modelmapper le rimappo da OBJJSON -> ENTITY
-        List<CountryTypology> countryEntityList = countriesJson.stream()
-                .map(countryJson -> modelMapper.map(countryJson, CountryTypology.class)).toList();
+        List<CountryTypology> countryEntityList =  ICountryTypologyMapper.INSTANCE.countryJsonListToEntityList(countriesJson);
 
-        List<AirportEntity> airportEntityList = airportsJson.stream()
-                .map(airportJson -> modelMapper.map(airportJson, AirportEntity.class
-                )).toList();
-
+        List<AirportEntity> airportEntityList = IAirportMapper.INSTANCE.countryJsonListToEntityList(airportsJson);
 
         // Eseguo un mapping a mano su Airport
         airportEntityList.forEach(aeroporto -> {
