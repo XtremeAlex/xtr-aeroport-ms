@@ -45,7 +45,7 @@ public class AirportDataService {
 
     @PostConstruct
     public void init() throws IOException {
-        loadJsonData();
+        //loadJsonData();
     }
 
 
