@@ -64,6 +64,14 @@
 │   │                       └── CountryService.java
 │   └── resources
 │       ├── META-INF
+│       │   └── native-image
+│       │       ├── agent-extracted-predefined-classes
+│       │       ├── jni-config.json
+│       │       ├── predefined-classes-config.json
+│       │       ├── proxy-config.json
+│       │       ├── reflect-config.json
+│       │       ├── resource-config.json
+│       │       └── serialization-config.json
 │       ├── application.yml
 │       ├── banner.txt
 │       ├── data.sql
@@ -81,4 +89,4 @@
                 └── aeroport
                     └── AeroportApplicationTests.java
 
-34 directories, 48 files
+36 directories, 54 files

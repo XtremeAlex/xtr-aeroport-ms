@@ -180,6 +180,14 @@ Per utilizzare e contribuire a questo progetto, avrai bisogno di installare:
 │   │                       └── CountryService.java
 │   └── resources
 │       ├── META-INF
+│       │   └── native-image
+│       │       ├── agent-extracted-predefined-classes
+│       │       ├── jni-config.json
+│       │       ├── predefined-classes-config.json
+│       │       ├── proxy-config.json
+│       │       ├── reflect-config.json
+│       │       ├── resource-config.json
+│       │       └── serialization-config.json
 │       ├── application.yml
 │       ├── banner.txt
 │       ├── data.sql
@@ -196,7 +204,6 @@ Per utilizzare e contribuire a questo progetto, avrai bisogno di installare:
             └── xtremealex
                 └── aeroport
                     └── AeroportApplicationTests.java
-
 ```
 
 ### Compilazione
@@ -205,28 +212,163 @@ Per utilizzare e contribuire a questo progetto, avrai bisogno di installare:
 
 1. Per iniziare, clona il repository `xtr-aeroports-ms` sul tuo computer locale usando Git.
    Apri il terminale e esegui il seguente comando:
-    ```
-    git clone https://<repository>/xtr-aeroports-ms.git cd
-    xtr-aeroports-ms
-    ```
+   ```
+   git clone https://<repository>/xtr-aeroports-ms.git cd
+   xtr-aeroports-ms
+   ```
 
 2. Una volta clonato il repository, puoi compilare il progetto utilizzando Maven.
    Esegui il seguente comando nella directory radice del progetto:
-    ```
-    mvn clean package -DskipTests
-    ```
-   <img src="_assets/images/mvn-build.png" alt="_info/mvn-build.png"/>
+   ```
+   mvn clean package -DskipTests
+   ```
+   <img src="_assets/images/mvn-build.png" alt="_assets/images/mvn-build.png"/>
 
 3. Ora puoi avviarlo eseguendo:
-    ```
-    java -jar ./target/aeroport-0.1.jar
-    ```
-   <img src="_assets/images/graal-jdk17-start-jar.png" alt="_info/graal-jdk17-start-jar.png"/>
+   ```
+   java -jar ./target/aeroport-0.1.jar
+   ```
+   <img src="_assets/images/run-by-graal-jdk17.png" alt="_assets/images/graal-jdk17-start-jar.png"/>
 
 
+4. Generare file necessari per la native-image:
+
+   Ci vorrà un po' se si hanno configurazioni particolari come nel mio caso. Ma è una situazione eccezionale.
+
+   ```
+   java -agentlib:native-image-agent=config-output-dir=./src/main/resources/META-INF/native-image -jar ./target/*.jar com.xtremealex.aeroport.AeroportApplication
+   ```
+   <img src="_assets/images/run-agentlib.png" alt="_assets/images/run-agentlib.png" />
+
+
+5. Compilare Nativamente un Imagine:
+
+   Sto usando un'Apple M1 come CPU, che è il primo System on a chip progettato da Apple Inc. in architettura RISC su base ARM (Aarch64)
+   Nel mio progetto ci sono i profili adeguati per la diversa architettura della propria macchina.
+   `farò un approfondimento in seguito`
+
+   Quasi tutte le funzionalità di graal sono supportate su ARM64, ad'eccezione delle limitazioni descritte di seguito.
+   <a href="https://www.graalvm.org/22.0/reference-manual/native-image/ARM64/">www.graalvm.org</a>
+   ```
+    -R:[+|-]WriteableCodeCache: deve essere disabilitato.
+    --libc=<value>: musl non è supportato.
+    --gc=<value>: Il Garbage Collector G1 ( G1) non è supportato.
+   ```
+
+   Ogni opzione ha uno scopo specifico per ottimizzare e configurare la compilazione. (Nel .POM)
+   ```
+   <plugin>
+    <groupId>org.graalvm.buildtools</groupId>
+     <artifactId>native-maven-plugin</artifactId>
+      <configuration>
+       <mainClass>${mainClass}</mainClass>
+        <buildArgs>
+         <arg>
+          --verbose --> Abilita la stampa di messaggi dettagliati durante il processo di compilazione. È utile per il debug e per capire meglio come procede la compilazione.
+          -Dspring.aot.enabled=true --> Abilita il supporto per l'ottimizzazione Ahead-of-Time (AOT) di Spring, che migliora le prestazioni di avvio e riduce l'uso della memoria.
+          -H:TraceClassInitialization=true --> Traccia l'inizializzazione delle classi durante la compilazione. Questo aiuta a identificare le classi che potrebbero causare problemi durante la compilazione nativa.
+          -H:+ReportExceptionStackTraces --> Stampa la traccia dello stack delle eccezioni in caso di errori durante la compilazione.
+          -H:Name=aeroport --> Imposta il nome del file eseguibile finale.
+          -H:DashboardDump=aeroport-dump --> Specifica il nome del file dump per il dashboard di GraalVM.
+          -H:+DashboardAll --> Abilita la raccolta di tutti i dati per il dashboard di GraalVM.
+          -H:Class=com.xtremealex.aeroport.AeroportApplication
+          --initialize-at-build-time=org.slf4j.LoggerFactory,ch.qos.logback,org.slf4j.MDC,org.slf4j.impl.StaticLoggerBinder -->  Elenca le classi o i pacchetti che devono essere inizializzati al momento della compilazione, anziché a runtime. Ciò può migliorare le prestazioni di avvio.
+          --initialize-at-run-time=framework --> In caso si usi un framework personalizzato deve essere inizializzato a runtime, non durante la compilazione.
+          -Dspring.graal.remove-unused-autoconfig=true --> Rimuove le configurazioni automatiche non utilizzate per ridurre la dimensione dell'immagine nativa.
+          -Dspring.graal.remove-yaml-support=true --> Disabilita il supporto per i file YAML per ridurre ulteriormente la dimensione dell'immagine.
+         </arg> 
+      ...   
+      ```
+
+      Per risolvere i problemi di Reflection bisogna di lanciare prima di qualsiasi compilazione nativa:
+      ```
+      java -agentlib:native-image-agent=config-output-dir=./src/main/resources/META-INF/native-image -jar ./target/*.jar com.xtremealex.aeroport.AeroportApplication
+      ```
+
+      OPPURE
+      ```
+      java -agentlib:native-image-agent=config-output-dir=./configs/native-image -jar ./target/*.jar com.xtremealex.aeroport.AeroportApplication  
+      ```
+
+      Il plugin native-image-agent genera diversi file .json, ognuno dei quali contiene informazioni specifiche su un aspetto del codice che deve essere compilato.
+      ```
+         <buildArg>-H:ReflectionConfigurationFiles=configs/native-image/reflect-config.json</buildArg>
+         <buildArg>-H:JNIConfigurationFiles=configs/native-image/jni-config.json</buildArg>
+         <buildArg>-H:DynamicProxyConfigurationFiles=configs/native-image/proxy-config.json</buildArg>
+         <buildArg>-H:ResourceConfigurationFiles=configs/native-image/resource-config.json</buildArg>
+         <buildArg>-H:SerializationConfigurationFiles=configs/native-image/serialization-config.json</buildArg>
+      ```
+
+      Se si crea una folder sotto resources META-INF.native-image non serve aggiungere i buildArgs, di default li cerca dentro resources/META-INF/native-image
+      ```
+      </buildArgs>
+                    <agent>
+                        <enabled>true</enabled>
+                        <defaultMode>Standard</defaultMode>
+                        <options>
+                            <trackReflectionMetadata>true</trackReflectionMetadata>
+                        </options>
+                        <metadataCopy>
+                            <disabledStages>
+                                <stage>true</stage>
+                            </disabledStages>
+                            <merge>true</merge>
+                            <outputDirectory>/tmp/native-image</outputDirectory>
+                        </metadataCopy>
+                    </agent>
+                    -->
+                </configuration>
+            </plugin>        
+    ...
+   ```
+
+  A valle delle configurazioni sul pom, procedere con la compilazione nativa:
+  ```
+  mvn package -DskipTests -Pnative
+  ```
+  <img src="_assets/images/native-mvn-build.png" alt="_assets/images/mvn-build-native.png" />
+
+  In ./target/<app-nativa-per-il-tuo-sistema>, in questo caso 'aeroport', per i sistemi windows sarà aeroport.exe
+
+  <img src="_assets/images/native-macos-result-build.png" alt="_assets/images/result-build.png" />
+
+
+  **Avvio dell'applicazione NATIVA**
+  ```
+  ./target/aeroport
+  ```
+
+  <img src="_assets/images/native-run-app.png" alt="_assets/images/native-run-app.png" />
+
+  Come si puo vedere i tempi di avvio si sono dimezzati (`4.22`), e considerate che è attivo l'init che importa i valori del json dentro l'h2.
+
+  Se procediamo disabilitando l'init abbiamo una differenza immensa della durata di avvio dell'applicazione con benefici assoluti in un'ambiente cloud.
+  no-init `1.507 seconds`
+
+  <img src="_assets/images/run-no-init-by-graal-jdk17.png" alt="_assets/images/run-no-init-by-graal-jdk17.png" />
+
+  native no-init `0.151 seconds`, **si avvia 10 vole piu velocemente** e usando meno risorse.
+
+  <img src="_assets/images/native-run-no-init-by-graal-jdk17.png" alt="_assets/images/native-run-no-init-by-graal-jdk17.png" />
+
+  **Perciò facendo un recap:**
+  ```
+  mvn clean
+  mvn package -DskipTests
+  java -agentlib:native-image-agent=config-output-dir=src/main/resources/META-INF/native-image -jar ./target/*.jar com.xtremealex.aeroport.AeroportApplication
+  mvn package -DskipTests -Pnative
+  ./target/aeroport
+  ```
+  Si può usare anche docker per effettuare una build:
+
+  ```
+  mvn package -DskipTests -Pnative && mvn package -DskipTests -Pdocker-m1-arm
+  docker run -p 8080:8080 artifactory.io/k8s-test/namespace/com.xtremealex/aeroport:0.2.0
+  ```
+  <img src="_assets/images/native-docker-arm-build.png" alt="_assets/images/native-docker-arm-build.png" />
+  <img src="_assets/images/native-run-docker-arm.png" alt="_assets/images/native-run-docker-arm.png" />
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 <!-- USAGE EXAMPLES -->
 ## Play & Test
@@ -269,7 +411,7 @@ Per utilizzare e contribuire a questo progetto, avrai bisogno di installare:
 - [x] Creare Verticale SearchAirport
 - [x] Creare Verticale SearchAirportType
 - [x] Sostituire MolderMapper con Mapstruct
-- [ ] Compilare Nativamente con Graal
+- [x] Compilare Nativamente con Graal
 - [ ] Creare tutti i Dockerfile e Docker-Compose per
     - [ ] Graal JDK17
     - [ ] Graal JDK17 (nativo)
@@ -370,8 +512,8 @@ Inserisco questi url che potrebbero essere utili:
 [license-url]: https://github.com/XtremeAlex/xtr-aeroport-ms/blob/develop/LICENSE
 [linkedin-shield]: https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white
 [linkedin-url]: https://www.linkedin.com/in/andrei-alexandru-dabija/
-[product-logo]: _assets/images/screenshot_black.png
-[product-screenshot]: _assets/images/screenshot.png
+[product-logo]: _assets/images/banner-dark.png
+[product-screenshot]: _assets/images/banner.png
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [Next-url]: https://nextjs.org/
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB

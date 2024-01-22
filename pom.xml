@@ -16,6 +16,14 @@
     <properties>
         <java.version>17</java.version>
         <mainClass>com.xtremealex.aeroport.AeroportApplication</mainClass>
+
+        <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+        <!-- <m2e.apt.activation>jdt_apt</m2e.apt.activation> -->
+
+        <!-- FOR GRALL NATIVE -->
+        <maven.build.timestamp.format>yyyy.MM.dd_HH.mm</maven.build.timestamp.format>
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <docker.image>artifactory.io/k8s-test/namespace/${project.groupId}/${project.artifactId}:${project.version}</docker.image>
     </properties>
     <dependencies>
 
@@ -27,7 +35,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.15.2</version> <!-- Usa l'ultima versione disponibile -->
+            <version>2.15.2</version>
         </dependency>
 
         <dependency>
@@ -64,7 +72,7 @@
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
-            <version>1.6.0.Beta1</version>
+            <version>${org.mapstruct.version}</version>
         </dependency>
 
 
@@ -83,7 +91,7 @@
                         <path>
                             <groupId>org.mapstruct</groupId>
                             <artifactId>mapstruct-processor</artifactId>
-                            <version>1.5.5.Final</version>
+                            <version>${org.mapstruct.version}</version>
                         </path>
                         <path>
                             <groupId>org.projectlombok</groupId>
@@ -99,6 +107,69 @@
                 </configuration>
             </plugin>
 
+            <plugin>
+                <groupId>org.graalvm.buildtools</groupId>
+                <artifactId>native-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>${mainClass}</mainClass>
+                    <buildArgs>
+                        <!-- Ogni opzione ha uno scopo specifico per ottimizzare e configurare la compilazione. -->
+
+                        <arg>
+                            --verbose
+                            <!--
+                                -Dspring.aot.enabled=true
+                                -H:TraceClassInitialization=true
+                                -H:+ReportExceptionStackTraces
+                                -H:DashboardDump=aeroport-dump
+                                -H:+DashboardAll
+                                -/-initialize-at-build-time=org.slf4j.LoggerFactory,ch.qos.logback,org.slf4j.MDC,org.slf4j.impl.StaticLoggerBinder
+                                -Dspring.graal.remove-unused-autoconfig=true
+                                -Dspring.graal.remove-yaml-support=true
+                            -->
+                        </arg>
+
+
+                        <!--
+                            Per risolvere i problemi di Reflection si consiglia di lanciare prima di qualsiasi compilazione nativa:
+                                java -agentlib:native-image-agent=config-output-dir=./src/main/resources/META-INF/native-image -jar ./target/*.jar com.xtremealex.aeroport.AeroportApplication
+
+                            Il plugin native-image-agent genera diversi file .json,
+                            ognuno dei quali contiene informazioni specifiche su un aspetto del codice che deve essere compilato.
+
+                        <buildArg>-H:ReflectionConfigurationFiles=configs/native-image/reflect-config.json</buildArg>
+                        <buildArg>-H:JNIConfigurationFiles=configs/native-image/jni-config.json</buildArg>
+                        <buildArg>-H:DynamicProxyConfigurationFiles=configs/native-image/proxy-config.json</buildArg>
+                        <buildArg>-H:ResourceConfigurationFiles=configs/native-image/resource-config.json</buildArg>
+                        <buildArg>-H:SerializationConfigurationFiles=configs/native-image/serialization-config.json</buildArg>
+                        -->
+
+                        <!-- Se si crea una folder sotto resources META-INF.native-image non serve aggiungere i buildArgs, di default li cerca dentro resources/META-INF/native-image  -->
+                    </buildArgs>
+
+                    <!--
+                    Per non usare il metodo manuale usare queste configurazione dell agent,
+                    a in caso non puoi modificare i file in caso tu voglia aggiungere delle resource personalizzate
+                    -->
+                    <!--
+                    <agent>
+                        <enabled>true</enabled>
+                        <defaultMode>Standard</defaultMode>
+                        <options>
+                            <trackReflectionMetadata>true</trackReflectionMetadata>
+                        </options>
+                        <metadataCopy>
+                            <disabledStages>
+                                <stage>true</stage>
+                            </disabledStages>
+                            <merge>true</merge>
+                            <outputDirectory>/tmp/native-image</outputDirectory>
+                        </metadataCopy>
+                    </agent>
+                    -->
+                </configuration>
+            </plugin>
+
 
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -111,5 +182,109 @@
         </plugins>
     </build>
 
+    <profiles>
+
+        <profile>
+            <id>native</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.graalvm.buildtools</groupId>
+                        <artifactId>native-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>build-native</id>
+                                <goals>
+                                    <goal>compile-no-fork</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- PROFILE FOR MAC M1 ARM -->
+        <profile>
+            <id>docker-m1-arm</id>
+            <properties>
+                <!-- Salta i test quando questo profilo è attivo, non mi va di aspettare secoli... -->
+                <skipTests>true</skipTests>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <mainClass>${mainClass}</mainClass>
+                            <imageName>${docker.image}</imageName>
+                            <createdDate>now</createdDate>
+                            <excludes>
+                                <exclude>
+                                    <groupId>org.projectlombok</groupId>
+                                    <artifactId>lombok</artifactId>
+                                </exclude>
+                            </excludes>
+                            <!--
+                             Sfortunatamente, l'immagine di Packeto Buildpacks predefinita non supporta l'architettura Mac M1;
+                             Questa immagine  risolvere il problema.
+                            -->
+                            <image>
+                                <builder>dashaun/builder:tiny</builder>
+                            </image>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <!-- Spring AOT per la compilazione AOT -->
+                                    <goal>process-aot</goal>
+                                    <goal>build-image-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>docker-x86</id>
+            <properties>
+                <!-- Salta i test quando questo profilo è attivo, non mi va di aspettare secoli... -->
+                <skipTests>true</skipTests>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <mainClass>${mainClass}</mainClass>
+                            <imageName>${docker.image}-x86</imageName>
+                            <createdDate>now</createdDate>
+                            <excludes>
+                                <exclude>
+                                    <groupId>org.projectlombok</groupId>
+                                    <artifactId>lombok</artifactId>
+                                </exclude>
+                            </excludes>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <!-- Spring AOT per la compilazione AOT -->
+                                    <goal>process-aot</goal>
+                                    <goal>build-image-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+    </profiles>
 
 </project>
