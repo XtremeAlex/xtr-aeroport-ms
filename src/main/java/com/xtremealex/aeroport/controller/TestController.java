@@ -27,12 +27,12 @@ public class TestController {
 
     @GetMapping("/resEntityTestOk")
     public ResponseEntity getResEntityTestOk() {
-        return new ResponseEntity (responseWrapperBuilder.buildResponse(ErrorCode.E1, "TEST OK"), null, HttpStatus.OK);
+        return new ResponseEntity(responseWrapperBuilder.buildResponse(ErrorCode.E1, "TEST OK"), null, HttpStatus.OK);
     }
 
     @GetMapping("/resEntityTestKo")
     public ResponseEntity getResEntityTestKo() {
-        return new ResponseEntity (responseWrapperBuilder.buildResponse(ErrorCode.E0, "TEST KO"), null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(responseWrapperBuilder.buildResponse(ErrorCode.E0, "TEST KO"), null, HttpStatus.BAD_REQUEST);
     }
 
 }

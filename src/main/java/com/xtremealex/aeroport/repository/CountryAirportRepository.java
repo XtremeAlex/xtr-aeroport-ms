@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface CountryAirportRepository extends JpaRepository <CountryAirportCountView, Long> {
+public interface CountryAirportRepository extends JpaRepository<CountryAirportCountView, Long> {
 
     Optional<CountryTypology> findByName(String name);
 

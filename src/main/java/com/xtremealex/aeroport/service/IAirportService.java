@@ -19,15 +19,15 @@ public interface IAirportService {
 
     long getTotalElementsAllByIsoCountryAndNameContainingIgnoreCase(String isoCountry, String name);
 
-    long getTotalElementsAllByIsoCountryAndNameContainingIgnoreCaseAndAirportTypeIdIn(String isoCountry,String name, Set<String> airportTypeIds);
+    long getTotalElementsAllByIsoCountryAndNameContainingIgnoreCaseAndAirportTypeIdIn(String isoCountry, String name, Set<String> airportTypeIds);
 
 
-    Page<AirportDTO> getAllByIsoCountryAndAirportTypeIdIn(String isoCountry,Set<String> airportType,  Pageable pageable);
+    Page<AirportDTO> getAllByIsoCountryAndAirportTypeIdIn(String isoCountry, Set<String> airportType, Pageable pageable);
 
     Page<AirportDTO> getAllByLikeNameAndAirportTypeIdIn(String name, Set<String> airportTypeIds, Pageable pageable);
 
     Page<AirportDTO> getAllByIsoCountryAndLikeName(String isoCountry, String name, Pageable pageable);
 
-    Page<AirportDTO> getAllByIsoCountryAndLikeNameAndAirportTypeIdIn(String isoCountry,String name, Set<String> airportTypeIds,Pageable pageable);
+    Page<AirportDTO> getAllByIsoCountryAndLikeNameAndAirportTypeIdIn(String isoCountry, String name, Set<String> airportTypeIds, Pageable pageable);
 
 }

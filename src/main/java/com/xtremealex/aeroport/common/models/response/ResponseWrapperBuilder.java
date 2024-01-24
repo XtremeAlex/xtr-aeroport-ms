@@ -3,8 +3,6 @@ package com.xtremealex.aeroport.common.models.response;
 import com.xtremealex.aeroport.common.models.ErrorCode;
 
 public class ResponseWrapperBuilder<T> {
-
-
     public ResponseWrapper<T> buildResponse(ErrorCode errorCode, String msg) {
         ResponseWrapper<T> responseWrapper = new ResponseWrapper<>();
         responseWrapper.setCode(errorCode.getCode());
@@ -13,7 +11,7 @@ public class ResponseWrapperBuilder<T> {
         return responseWrapper;
     }
 
-    public ResponseWrapper<T> buildResponse(ErrorCode errorCode,  T filters, String msg) {
+    public ResponseWrapper<T> buildResponse(ErrorCode errorCode, T filters, String msg) {
         ResponseWrapper<T> responseWrapper = new ResponseWrapper<>();
         responseWrapper.setCode(errorCode.getCode());
         responseWrapper.setDescription(errorCode.getDescription());
@@ -31,8 +29,7 @@ public class ResponseWrapperBuilder<T> {
     }
 
 
-
-    public ResponseWrapper<T> buildResponse(ErrorCode errorCode,T filters, T playload) {
+    public ResponseWrapper<T> buildResponse(ErrorCode errorCode, T filters, T playload) {
         ResponseWrapper<T> responseWrapper = new ResponseWrapper<>();
         responseWrapper.setCode(errorCode.getCode());
         responseWrapper.setDescription(errorCode.getDescription());

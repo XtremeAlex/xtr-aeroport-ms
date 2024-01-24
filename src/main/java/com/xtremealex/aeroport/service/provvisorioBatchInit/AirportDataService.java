@@ -42,10 +42,15 @@ public class AirportDataService {
     @Autowired
     private CountryService countryService;
 
+    @Autowired
+    private ICountryTypologyMapper countryTypologyMapper;
+
+    @Autowired
+    private IAirportMapper airportMapper;
 
     @PostConstruct
     public void init() throws IOException {
-        //loadJsonData();
+        loadJsonData();
     }
 
 
@@ -66,9 +71,9 @@ public class AirportDataService {
 
         // Non voglio lavorare direttamente sulle Entity in quanto queste magari li do al FE/REST se cambia la futura stuttura del JSON in input sono costretto a modificare gran parte del codice, preferisco lascialro modulare
         // Con Modelmapper le rimappo da OBJJSON -> ENTITY
-        List<CountryTypology> countryEntityList =  ICountryTypologyMapper.INSTANCE.countryJsonListToEntityList(countriesJson);
+        List<CountryTypology> countryEntityList = countryTypologyMapper.countryJsonListToEntityList(countriesJson);
 
-        List<AirportEntity> airportEntityList = IAirportMapper.INSTANCE.countryJsonListToEntityList(airportsJson);
+        List<AirportEntity> airportEntityList = airportMapper.countryJsonListToEntityList(airportsJson);
 
         // Eseguo un mapping a mano su Airport
         airportEntityList.forEach(aeroporto -> {
@@ -98,7 +103,6 @@ public class AirportDataService {
             // Associa il valore inserito all'aeroporto
             aeroporto.setAirportType(airportType);
         });
-
 
 
         // Salva direttamente la lista.

@@ -10,7 +10,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface ICountryTypologyMapper {
-    ICountryTypologyMapper INSTANCE = Mappers.getMapper(ICountryTypologyMapper.class);
+    //ICountryTypologyMapper INSTANCE = Mappers.getMapper(ICountryTypologyMapper.class);
 
     List<CountryTypology> countryJsonListToEntityList(List<CountryJson> countryJsonList);
 

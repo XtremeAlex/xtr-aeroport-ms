@@ -1,18 +1,19 @@
 package com.xtremealex.aeroport.common.models.response.airports;
 
 
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-@Getter
-@Setter
-//@NoArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
-public class AirportDTO  implements Serializable{
+@ToString
+public class AirportDTO implements Serializable {
 
 
     private static final long serialVersionUID = 6291265644022065469L;
@@ -50,6 +51,4 @@ public class AirportDTO  implements Serializable{
 
     private String lastModifiedBy;
 
-    public AirportDTO() {
-    }
 }

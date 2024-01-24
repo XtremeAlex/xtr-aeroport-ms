@@ -2,6 +2,7 @@ package com.xtremealex.aeroport.controller;
 
 import com.xtremealex.aeroport.common.models.ErrorCode;
 import com.xtremealex.aeroport.common.models.request.AirportSearchRequest;
+import com.xtremealex.aeroport.common.models.response.ResponseWrapper;
 import com.xtremealex.aeroport.common.models.response.ResponseWrapperBuilder;
 import com.xtremealex.aeroport.common.models.response.airports.AirportDTO;
 import com.xtremealex.aeroport.service.IAirportService;
@@ -33,13 +34,13 @@ public class SearchAirport {
 
     //http://localhost:8080/xtr-aeroport/getAirport?types=1,2,3,4,5,6,7,8&isoCountry=IT&pageNumber=4&pageSize=1000&sortField=name
     @GetMapping("/getAirportsBy")
-    public ResponseEntity<?> getAirportsBy(@RequestParam(required = false) Set<String> types,
-                                          @RequestParam(required = false) String isoCountry,
-                                          @RequestParam(required = false) String name,
-                                          @RequestParam(defaultValue = "0") int pageNumber,
-                                          @RequestParam(defaultValue = "12") int pageSize,
-                                          @RequestParam(required = false) String sortField,
-                                          @RequestParam(defaultValue = "ASC") String sortDir) {
+    public ResponseEntity<ResponseWrapper<Page<AirportDTO>>> getAirportsBy(@RequestParam(required = false) Set<String> types,
+                                                                           @RequestParam(required = false) String isoCountry,
+                                                                           @RequestParam(required = false) String name,
+                                                                           @RequestParam(defaultValue = "0") int pageNumber,
+                                                                           @RequestParam(defaultValue = "12") int pageSize,
+                                                                           @RequestParam(required = false) String sortField,
+                                                                           @RequestParam(defaultValue = "ASC") String sortDir) {
 
         // Questa è una chicca, serve per avere a video un evvidenza dei filtri in entrata usati per la ricerca, in piu lo uso per snellire il codices
         AirportSearchRequest filtriInput = new AirportSearchRequest(types, isoCountry, name, pageNumber, pageSize, sortField, sortDir);
@@ -47,14 +48,13 @@ public class SearchAirport {
         return genericSearchAirports(filtriInput);
     }
 
-
     //TODO: Da testare non testato :(
     @PostMapping("/searchAirports")
-    public ResponseEntity<?> searchAirports(@RequestBody AirportSearchRequest searchRequest) {
+    public ResponseEntity<ResponseWrapper<Page<AirportDTO>>> searchAirports(@RequestBody AirportSearchRequest searchRequest) {
         return genericSearchAirports(searchRequest);
     }
 
-    public ResponseEntity<?> genericSearchAirports(AirportSearchRequest searchRequest) {
+    public ResponseEntity genericSearchAirports(AirportSearchRequest searchRequest) {
         try {
 
             //Se sei furbo ti sego le gambe cosi ;)
@@ -74,9 +74,8 @@ public class SearchAirport {
             Pageable pageable = creaPaginazione(searchRequest.getPageNumber(), searchRequest.getPageSize(), searchRequest.getSortField(), searchRequest.getSortDir());
 
             Page<AirportDTO> airports = search(searchRequest.getTypes(), searchRequest.getIsoCountry(), searchRequest.getName(), pageable);
-
             if (airports == null || airports.isEmpty()) {
-                return new ResponseEntity<>(responseWrapperBuilder.buildResponse(ErrorCode.E1, searchRequest, "Nessun aeroporto trovato"), null, HttpStatus.NOT_FOUND);
+                return new ResponseEntity(responseWrapperBuilder.buildResponse(ErrorCode.E1, searchRequest, "Nessun aeroporto trovato"), null, HttpStatus.NOT_FOUND);
             }
 
             return returnResults(airports, searchRequest);
@@ -121,15 +120,15 @@ public class SearchAirport {
         return pageable;
     }
 
-    private ResponseEntity<?> returnError(Exception e, Object searchParams) {
+    private ResponseEntity returnError(Exception e, Object searchParams) {
         return new ResponseEntity<>(responseWrapperBuilder.buildResponse(ErrorCode.E0, searchParams, e.getMessage()), null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private ResponseEntity<?> returnResults(Page<AirportDTO> airports, AirportSearchRequest searchParams) {
+    private ResponseEntity returnResults(Page<AirportDTO> airports, AirportSearchRequest searchParams) {
         if (airports == null || airports.isEmpty()) {
-            return new ResponseEntity<>(responseWrapperBuilder.buildResponse(ErrorCode.E1, searchParams, "Nessun aeroporto trovato"), null, HttpStatus.OK);
+            return new ResponseEntity(responseWrapperBuilder.buildResponse(ErrorCode.E1, searchParams, "Nessun aeroporto trovato"), null, HttpStatus.OK);
         }
-        return new ResponseEntity<>(responseWrapperBuilder.buildResponse(ErrorCode.E1, searchParams, airports), null, HttpStatus.OK);
+        return new ResponseEntity(responseWrapperBuilder.buildResponse(ErrorCode.E1, searchParams, airports), null, HttpStatus.OK);
     }
 
 }

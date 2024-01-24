@@ -45,9 +45,9 @@ public class SearchAirportType {
 
     @GetMapping("/getAllAirportType/{pageNumber}/{pageSize}/{sortField}/{sortDir}")
     public ResponseEntity<?> getAirports(@PathVariable Integer pageNumber,
-                                          @PathVariable Integer pageSize,
-                                          @PathVariable String sortField,
-                                          @PathVariable String sortDir) {
+                                         @PathVariable Integer pageSize,
+                                         @PathVariable String sortField,
+                                         @PathVariable String sortDir) {
 
         try {
 

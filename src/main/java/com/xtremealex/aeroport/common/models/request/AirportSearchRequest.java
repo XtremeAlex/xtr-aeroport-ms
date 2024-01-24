@@ -3,7 +3,6 @@ package com.xtremealex.aeroport.common.models.request;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Pageable;
 
 import java.io.Serializable;
 import java.util.Set;
