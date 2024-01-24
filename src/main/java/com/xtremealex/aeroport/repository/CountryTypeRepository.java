@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface CountryTypeRepository extends JpaRepository <CountryTypology, Long> {
+public interface CountryTypeRepository extends JpaRepository<CountryTypology, Long> {
 
     Optional<CountryTypology> findByName(String name);
 

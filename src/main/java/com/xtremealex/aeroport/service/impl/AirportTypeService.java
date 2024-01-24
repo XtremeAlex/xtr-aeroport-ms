@@ -14,12 +14,15 @@ import org.springframework.stereotype.Service;
 public class AirportTypeService implements IAirportTypeService {
 
     @Autowired
+    IAirportTypeTypologyMapper airportTypeTypologyMapper;
+
+    @Autowired
     private AirportTypeRepository airportTypeRepository;
 
     @Override
     public Page<AirportTypeDTO> getAll(Pageable pageable) {
 
         Page<AirportTypeTypology> page = airportTypeRepository.findAll(pageable);
-        return IAirportTypeTypologyMapper.INSTANCE.entityPageToDtoPage(page, page.getPageable());
+        return airportTypeTypologyMapper.entityPageToDtoPage(page, page.getPageable());
     }
 }

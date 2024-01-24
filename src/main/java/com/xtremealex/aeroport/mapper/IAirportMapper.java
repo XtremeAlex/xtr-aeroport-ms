@@ -3,21 +3,24 @@ package com.xtremealex.aeroport.mapper;
 import com.xtremealex.aeroport.common.models.json.AirportJson;
 import com.xtremealex.aeroport.common.models.response.airports.AirportDTO;
 import com.xtremealex.aeroport.entity.AirportEntity;
+import com.xtremealex.aeroport.utility.IStringConverter;
+import com.xtremealex.aeroport.utility.StringConverter;
+import org.mapstruct.InheritConfiguration;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring" , uses = IStringConverter.class)
 public interface IAirportMapper {
-    IAirportMapper INSTANCE = Mappers.getMapper(IAirportMapper.class);
+
+    //Grazie Luca Rurio :)
+
+    //IAirportMapper INSTANCE = Mappers.getMapper(IAirportMapper.class);
 
     List<AirportEntity> countryJsonListToEntityList(List<AirportJson> airportJsonList);
 
@@ -30,30 +33,13 @@ public interface IAirportMapper {
         List<AirportDTO> dtoList = entityPage.stream()
                 .map(this::entityToDto)
                 .collect(Collectors.toList());
+
         return new PageImpl<>(dtoList, pageable, entityPage.getTotalElements());
     }
 
-    @Mapping(target = "id", source = "id", qualifiedByName = "longToStringBase64")
     AirportDTO entityToDto(AirportEntity entity);
 
-    @Mapping(target = "id", source = "id", qualifiedByName = "stringBase64ToLong")
+    //@Mapping(target = "id", source = "id", qualifiedByName = "convertStringBase64ToLong")
     AirportEntity dtoToEntity(AirportDTO dto);
-
-    @Named("longToStringBase64")
-    default String convertLongToStringBase64(Long value) {
-        return value != null ? Base64.getEncoder().encodeToString(value.toString().getBytes()) : null;
-    }
-
-    @Named("stringBase64ToLong")
-    default Long convertStringBase64ToLong(String source) {
-        if (source == null) {
-            return null;
-        }
-        try {
-            return Long.parseLong(new String(Base64.getDecoder().decode(source)));
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("L'ID stringa non è un valido.");
-        }
-    }
 
 }

@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.xtremealex</groupId>
     <artifactId>aeroport</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
     <name>xtr-aeroport-ms</name>
     <description>Demo Aeroport Graal project for Spring Boot</description>
     <properties>
@@ -131,26 +131,14 @@
 
 
                         <!--
-                            Per risolvere i problemi di Reflection si consiglia di lanciare prima di qualsiasi compilazione nativa:
-                                java -agentlib:native-image-agent=config-output-dir=./src/main/resources/META-INF/native-image -jar ./target/*.jar com.xtremealex.aeroport.AeroportApplication
-
-                            Il plugin native-image-agent genera diversi file .json,
-                            ognuno dei quali contiene informazioni specifiche su un aspetto del codice che deve essere compilato.
-
                         <buildArg>-H:ReflectionConfigurationFiles=configs/native-image/reflect-config.json</buildArg>
                         <buildArg>-H:JNIConfigurationFiles=configs/native-image/jni-config.json</buildArg>
                         <buildArg>-H:DynamicProxyConfigurationFiles=configs/native-image/proxy-config.json</buildArg>
                         <buildArg>-H:ResourceConfigurationFiles=configs/native-image/resource-config.json</buildArg>
                         <buildArg>-H:SerializationConfigurationFiles=configs/native-image/serialization-config.json</buildArg>
                         -->
-
-                        <!-- Se si crea una folder sotto resources META-INF.native-image non serve aggiungere i buildArgs, di default li cerca dentro resources/META-INF/native-image  -->
                     </buildArgs>
 
-                    <!--
-                    Per non usare il metodo manuale usare queste configurazione dell agent,
-                    a in caso non puoi modificare i file in caso tu voglia aggiungere delle resource personalizzate
-                    -->
                     <!--
                     <agent>
                         <enabled>true</enabled>

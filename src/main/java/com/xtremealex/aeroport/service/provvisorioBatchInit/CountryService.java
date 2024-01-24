@@ -9,7 +9,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
@@ -39,7 +42,6 @@ public class CountryService {
         CountryTypology[] countries = objectMapper.readValue(reader, CountryTypology[].class);
 
 
-
         countryRepository.saveAll(Arrays.stream(countries).toList());
 
     }
@@ -53,7 +55,7 @@ public class CountryService {
         return countryRepository.findByIsoCountry(iso);
     }
 
-    public void saveAll(List<CountryTypology> countryEntityList){
+    public void saveAll(List<CountryTypology> countryEntityList) {
         countryRepository.saveAll(countryEntityList);
     }
 
