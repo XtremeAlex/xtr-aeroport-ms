@@ -1,0 +1,9 @@
+version: '3'
+services:
+  app:
+    image: native-linux-graal-aeroport
+    build:
+      context: .
+      dockerfile: native-linux.Dockerfile
+    ports:
+      - "8080:8080"

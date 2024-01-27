@@ -110,16 +110,10 @@
       "pattern":"\\Qcom/xtremealex/aeroport/service/IAirportTypeService.class\\E"
     }, 
     {
-      "pattern":"\\Qcom/xtremealex/aeroport/service/IEncryptionService.class\\E"
-    }, 
-    {
       "pattern":"\\Qcom/xtremealex/aeroport/service/impl/AirportService.class\\E"
     }, 
     {
       "pattern":"\\Qcom/xtremealex/aeroport/service/impl/AirportTypeService.class\\E"
-    }, 
-    {
-      "pattern":"\\Qcom/xtremealex/aeroport/service/impl/EncryptionService.class\\E"
     }, 
     {
       "pattern":"\\Qcom/xtremealex/aeroport/service/provvisorioBatchInit/AirportDataService.class\\E"
@@ -128,13 +122,13 @@
       "pattern":"\\Qcom/xtremealex/aeroport/service/provvisorioBatchInit/CountryService.class\\E"
     }, 
     {
+      "pattern":"\\Qcom/xtremealex/aeroport/utility/IStringConverter.class\\E"
+    }, 
+    {
+      "pattern":"\\Qcom/xtremealex/aeroport/utility/StringConverter.class\\E"
+    }, 
+    {
       "pattern":"\\Qdata.sql\\E"
-    }, 
-    {
-      "pattern":"\\Qdataset/airports/world-airport.json\\E"
-    }, 
-    {
-      "pattern":"\\Qdataset/country/countries-flag.json\\E"
     }, 
     {
       "pattern":"\\Qorg/apache/catalina/core/RestrictedFilters.properties\\E"
