@@ -114,47 +114,14 @@
                     <mainClass>${mainClass}</mainClass>
                     <buildArgs>
                         <!-- Ogni opzione ha uno scopo specifico per ottimizzare e configurare la compilazione. -->
-
                         <arg>
                             --verbose
-                            <!--
-                                -Dspring.aot.enabled=true
-                                -H:TraceClassInitialization=true
-                                -H:+ReportExceptionStackTraces
-                                -H:DashboardDump=aeroport-dump
-                                -H:+DashboardAll
-                                -/-initialize-at-build-time=org.slf4j.LoggerFactory,ch.qos.logback,org.slf4j.MDC,org.slf4j.impl.StaticLoggerBinder
-                                -Dspring.graal.remove-unused-autoconfig=true
-                                -Dspring.graal.remove-yaml-support=true
-                            -->
+                            -Dspring.aot.enabled=true
+                            -H:Name=./target/${artifactId}-app
+                            --initialize-at-build-time=org.slf4j.LoggerFactory,ch.qos.logback,org.slf4j.MDC,org.slf4j.impl.StaticLoggerBinder
+                            -Dspring.graal.remove-unused-autoconfig=true
                         </arg>
-
-
-                        <!--
-                        <buildArg>-H:ReflectionConfigurationFiles=configs/native-image/reflect-config.json</buildArg>
-                        <buildArg>-H:JNIConfigurationFiles=configs/native-image/jni-config.json</buildArg>
-                        <buildArg>-H:DynamicProxyConfigurationFiles=configs/native-image/proxy-config.json</buildArg>
-                        <buildArg>-H:ResourceConfigurationFiles=configs/native-image/resource-config.json</buildArg>
-                        <buildArg>-H:SerializationConfigurationFiles=configs/native-image/serialization-config.json</buildArg>
-                        -->
                     </buildArgs>
-
-                    <!--
-                    <agent>
-                        <enabled>true</enabled>
-                        <defaultMode>Standard</defaultMode>
-                        <options>
-                            <trackReflectionMetadata>true</trackReflectionMetadata>
-                        </options>
-                        <metadataCopy>
-                            <disabledStages>
-                                <stage>true</stage>
-                            </disabledStages>
-                            <merge>true</merge>
-                            <outputDirectory>/tmp/native-image</outputDirectory>
-                        </metadataCopy>
-                    </agent>
-                    -->
                 </configuration>
             </plugin>
 

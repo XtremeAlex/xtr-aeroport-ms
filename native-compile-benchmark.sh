@@ -55,3 +55,4 @@ calcola_tempo $start_time_totale $end_time_totale
 echo "Fine Build; lancia ./target/aeroport"
 echo "Compilare una Docker Img"
 echo "> mvn package -DskipTests -Pdocker-m1-arm"
+echo "oppure usare il docker-compose.yml"
