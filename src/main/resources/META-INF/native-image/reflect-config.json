@@ -30,6 +30,12 @@
   "name":"[Ljava.sql.Statement;"
 },
 {
+  "name":"[Ljava.util.List;"
+},
+{
+  "name":"[Ljava.util.function.Supplier;"
+},
+{
   "name":"[Lorg.hibernate.event.spi.AutoFlushEventListener;"
 },
 {
@@ -90,13 +96,22 @@
   "name":"[Lorg.hibernate.event.spi.SaveOrUpdateEventListener;"
 },
 {
+  "name":"[Lorg.hibernate.query.sqm.sql.FromClauseIndex;"
+},
+{
   "name":"[Lorg.hibernate.sql.ast.Clause;"
+},
+{
+  "name":"[Lorg.hibernate.sql.ast.spi.SqlAstProcessingState;"
 },
 {
   "name":"[Lorg.hibernate.sql.ast.tree.Statement;"
 },
 {
   "name":"[Lorg.hibernate.sql.ast.tree.select.QueryPart;"
+},
+{
+  "name":"[Lorg.hibernate.sql.results.jdbc.spi.JdbcValuesSourceProcessingState;"
 },
 {
   "name":"[Lorg.springframework.core.annotation.AnnotationAttributes;"
@@ -184,6 +199,7 @@
   "methods":[
     {"name":"getJsonFactory","parameterTypes":[] }, 
     {"name":"readValues","parameterTypes":["com.fasterxml.jackson.core.JsonParser","com.fasterxml.jackson.core.type.ResolvedType"] }, 
+    {"name":"readValues","parameterTypes":["com.fasterxml.jackson.core.JsonParser","com.fasterxml.jackson.core.type.TypeReference"] }, 
     {"name":"readValues","parameterTypes":["com.fasterxml.jackson.core.JsonParser","java.lang.Class"] }
   ]
 },
@@ -307,6 +323,37 @@
     {"name":"<init>","parameterTypes":[] }, 
     {"name":"CGLIB$SET_STATIC_CALLBACKS","parameterTypes":["org.springframework.cglib.proxy.Callback[]"] }, 
     {"name":"CGLIB$SET_THREAD_CALLBACKS","parameterTypes":["org.springframework.cglib.proxy.Callback[]"] }
+  ]
+},
+{
+  "name":"com.xtremealex.aeroport.common.models.json.AirportJson",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"setContinent","parameterTypes":["java.lang.String"] }, 
+    {"name":"setCoordinates","parameterTypes":["java.lang.String"] }, 
+    {"name":"setElevationFt","parameterTypes":["java.lang.String"] }, 
+    {"name":"setGpsCode","parameterTypes":["java.lang.String"] }, 
+    {"name":"setIataCode","parameterTypes":["java.lang.String"] }, 
+    {"name":"setIdent","parameterTypes":["java.lang.String"] }, 
+    {"name":"setIsoCountry","parameterTypes":["java.lang.String"] }, 
+    {"name":"setIsoRegion","parameterTypes":["java.lang.String"] }, 
+    {"name":"setMunicipality","parameterTypes":["java.lang.String"] }, 
+    {"name":"setName","parameterTypes":["java.lang.String"] }, 
+    {"name":"setType","parameterTypes":["java.lang.String"] }
+  ]
+},
+{
+  "name":"com.xtremealex.aeroport.common.models.json.CountryJson",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"setIsoCountry","parameterTypes":["java.lang.String"] }, 
+    {"name":"setName","parameterTypes":["java.lang.String"] }
   ]
 },
 {
@@ -905,6 +952,10 @@
 {
   "name":"jakarta.persistence.PersistenceProperty",
   "queryAllDeclaredMethods":true
+},
+{
+  "name":"jakarta.persistence.Query",
+  "methods":[{"name":"getParameters","parameterTypes":[] }]
 },
 {
   "name":"jakarta.persistence.Transient",
@@ -1899,6 +1950,10 @@
   "queryAllDeclaredConstructors":true
 },
 {
+  "name":"org.hibernate.query.Query",
+  "methods":[{"name":"getSingleResult","parameterTypes":[] }]
+},
+{
   "name":"org.hibernate.query.QueryLogging_$logger",
   "methods":[{"name":"<init>","parameterTypes":["org.jboss.logging.Logger"] }]
 },
@@ -1957,6 +2012,18 @@
 },
 {
   "name":"org.hibernate.sql.ast.tree.SqlAstTreeLogger_$logger",
+  "methods":[{"name":"<init>","parameterTypes":["org.jboss.logging.Logger"] }]
+},
+{
+  "name":"org.hibernate.sql.exec.SqlExecLogger_$logger",
+  "methods":[{"name":"<init>","parameterTypes":["org.jboss.logging.Logger"] }]
+},
+{
+  "name":"org.hibernate.sql.results.LoadingLogger_$logger",
+  "methods":[{"name":"<init>","parameterTypes":["org.jboss.logging.Logger"] }]
+},
+{
+  "name":"org.hibernate.sql.results.ResultsLogger_$logger",
   "methods":[{"name":"<init>","parameterTypes":["org.jboss.logging.Logger"] }]
 },
 {
@@ -4742,10 +4809,19 @@
   ]
 },
 {
+  "name":"org.springframework.data.jpa.repository.support.JpaRepositoryImplementation",
+  "queryAllPublicMethods":true
+},
+{
   "name":"org.springframework.data.jpa.repository.support.SimpleJpaRepository",
+  "queryAllDeclaredMethods":true,
   "queryAllPublicMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":["org.springframework.data.jpa.repository.support.JpaEntityInformation","jakarta.persistence.EntityManager"] }]
+  "methods":[
+    {"name":"<init>","parameterTypes":["org.springframework.data.jpa.repository.support.JpaEntityInformation","jakarta.persistence.EntityManager"] }, 
+    {"name":"save","parameterTypes":["java.lang.Object"] }, 
+    {"name":"saveAll","parameterTypes":["java.lang.Iterable"] }
+  ]
 },
 {
   "name":"org.springframework.data.jpa.util.HibernateProxyDetector",
@@ -5495,6 +5571,7 @@
   "queryAllDeclaredMethods":true,
   "queryAllPublicMethods":true,
   "methods":[
+    {"name":"createNativeEntityManager","parameterTypes":["java.util.Map"] }, 
     {"name":"getBeanClassLoader","parameterTypes":[] }, 
     {"name":"getDataSource","parameterTypes":[] }, 
     {"name":"getEntityManagerInterface","parameterTypes":[] }, 
