@@ -131,6 +131,12 @@
       "pattern":"\\Qdata.sql\\E"
     }, 
     {
+      "pattern":"\\Qdataset/airports/world-airport.json\\E"
+    }, 
+    {
+      "pattern":"\\Qdataset/country/countries-flag.json\\E"
+    }, 
+    {
       "pattern":"\\Qorg/apache/catalina/core/RestrictedFilters.properties\\E"
     }, 
     {

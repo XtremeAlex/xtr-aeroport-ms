@@ -23,23 +23,27 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
 ENV MAVEN_HOME /usr/share/maven
 ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 
-WORKDIR /build
+WORKDIR /opt/build
 
 # Copy the source code into the image for building
-COPY . /build
+COPY src src
+COPY pom.xml pom.xml
 
-# Build
-RUN mvn -Pnative -DskipTests native:compile
+# Avvia la build nativa
+RUN mvn package -Pnative -DskipTests
+    #native:compile
 
 # The deployment Image
 FROM docker.io/oraclelinux:8-slim
 
-WORKDIR /work/
-# Copy the native executable into the containers
-COPY --from=builder /build/target/*-app /work/application
+WORKDIR /opt/deployment/
 
-RUN chmod 775 /work
+# Copy the native executable into the containers
+COPY --from=builder /opt/build/target/*-app xtreme-application
+
+#RUN  chmod +x (Se vuoi semplicemntete dare i permessi di esecuzione)
+RUN chmod 775 xtreme-application
 
 EXPOSE 8080
 
-ENTRYPOINT ["./application"]
+ENTRYPOINT ["./xtreme-application"]
