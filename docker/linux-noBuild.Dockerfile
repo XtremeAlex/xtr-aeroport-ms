@@ -11,4 +11,4 @@ RUN chmod 775 xtreme-application
 
 EXPOSE 8080
 
-ENTRYPOINT ["./xtreme-application"]
+ENTRYPOINT ["java -jar xtreme-application.jar"]

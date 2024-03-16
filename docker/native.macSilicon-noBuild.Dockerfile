@@ -1,5 +1,5 @@
 # The deployment Image
-FROM <IMG>
+FROM busybox:musl
 
 WORKDIR /opt/deployment/
 
