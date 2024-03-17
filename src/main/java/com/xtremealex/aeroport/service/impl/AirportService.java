@@ -1,6 +1,6 @@
 package com.xtremealex.aeroport.service.impl;
 
-import com.xtremealex.aeroport.common.models.response.airports.AirportDTO;
+import com.xtremealex.aeroport.models.web.response.airports.AirportDTO;
 import com.xtremealex.aeroport.entity.AirportEntity;
 import com.xtremealex.aeroport.mapper.IAirportMapper;
 import com.xtremealex.aeroport.repository.AirportRepository;
