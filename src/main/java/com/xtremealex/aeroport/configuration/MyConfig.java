@@ -1,7 +1,7 @@
 package com.xtremealex.aeroport.configuration;
 
 
-import com.xtremealex.aeroport.common.models.response.ResponseWrapperBuilder;
+import com.xtremealex.aeroport.models.web.response.ResponseWrapperBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

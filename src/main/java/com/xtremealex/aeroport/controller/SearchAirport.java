@@ -1,10 +1,10 @@
 package com.xtremealex.aeroport.controller;
 
-import com.xtremealex.aeroport.common.models.ErrorCode;
-import com.xtremealex.aeroport.common.models.request.AirportSearchRequest;
-import com.xtremealex.aeroport.common.models.response.ResponseWrapper;
-import com.xtremealex.aeroport.common.models.response.ResponseWrapperBuilder;
-import com.xtremealex.aeroport.common.models.response.airports.AirportDTO;
+import com.xtremealex.aeroport.models.web.ErrorCode;
+import com.xtremealex.aeroport.models.web.request.AirportSearchRequest;
+import com.xtremealex.aeroport.models.web.response.ResponseWrapper;
+import com.xtremealex.aeroport.models.web.response.ResponseWrapperBuilder;
+import com.xtremealex.aeroport.models.web.response.airports.AirportDTO;
 import com.xtremealex.aeroport.service.IAirportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

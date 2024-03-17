@@ -1,7 +1,7 @@
 package com.xtremealex.aeroport.controller;
 
-import com.xtremealex.aeroport.common.models.ErrorCode;
-import com.xtremealex.aeroport.common.models.response.ResponseWrapperBuilder;
+import com.xtremealex.aeroport.models.web.ErrorCode;
+import com.xtremealex.aeroport.models.web.response.ResponseWrapperBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

@@ -1,6 +1,6 @@
 package com.xtremealex.aeroport.service;
 
-import com.xtremealex.aeroport.common.models.response.airports.AirportTypeDTO;
+import com.xtremealex.aeroport.models.web.response.airports.AirportTypeDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
