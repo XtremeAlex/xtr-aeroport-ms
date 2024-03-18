@@ -54,3 +54,13 @@ xtr-aeroport:
     pagination:
       maxPageSize: 48
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui/index.html
+    tryItOutEnabled: true
+    filter: true
+  api-docs:
+    path: /v3/api-docs
+  openapi:
+    dev-url: http://localhost:8080
+    prod-url: https://bubume.it
