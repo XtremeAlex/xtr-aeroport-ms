@@ -6,6 +6,7 @@ import com.xtremealex.aeroport.models.web.response.ResponseWrapper;
 import com.xtremealex.aeroport.models.web.response.ResponseWrapperBuilder;
 import com.xtremealex.aeroport.models.web.response.airports.AirportDTO;
 import com.xtremealex.aeroport.service.IAirportService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -31,8 +32,8 @@ public class SearchAirport {
     @Value("${xtr-aeroport.db.pagination.maxPageSize}")
     private Integer MAX_PAGE_SIZE;
 
-
     //http://localhost:8080/xtr-aeroport/getAirport?types=1,2,3,4,5,6,7,8&isoCountry=IT&pageNumber=4&pageSize=1000&sortField=name
+    @Tag(name = "Search Airport", description = "search il tuo aeroporto preferito")
     @GetMapping("/getAirportsBy")
     public ResponseEntity<ResponseWrapper<Page<AirportDTO>>> getAirportsBy(@RequestParam(required = false) Set<String> types,
                                                                            @RequestParam(required = false) String isoCountry,
