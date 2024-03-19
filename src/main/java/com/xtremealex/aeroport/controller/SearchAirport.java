@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Set;
 
 @RestController
+@Tag(name = "Search Airport", description = "cerca il tuo aeroporto preferito")
 public class SearchAirport {
 
     @Autowired
@@ -33,7 +34,7 @@ public class SearchAirport {
     private Integer MAX_PAGE_SIZE;
 
     //http://localhost:8080/xtr-aeroport/getAirport?types=1,2,3,4,5,6,7,8&isoCountry=IT&pageNumber=4&pageSize=1000&sortField=name
-    @Tag(name = "Search Airport", description = "search il tuo aeroporto preferito")
+
     @GetMapping("/getAirportsBy")
     public ResponseEntity<ResponseWrapper<Page<AirportDTO>>> getAirportsBy(@RequestParam(required = false) Set<String> types,
                                                                            @RequestParam(required = false) String isoCountry,

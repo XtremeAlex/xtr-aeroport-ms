@@ -61,7 +61,9 @@ springdoc:
   base: /v3
   swagger-ui:
     path: ${springdoc.base}/swagger-ui.html
-    tryItOutEnabled: false
+    tryItOutEnabled: true
+    operationsSorter: method
+    tagsSorter: alpha
     filter: true
   api-docs:
     path: ${springdoc.base}/api-docs

@@ -3,6 +3,7 @@ package com.xtremealex.aeroport.controller;
 import com.xtremealex.aeroport.models.web.ErrorCode;
 import com.xtremealex.aeroport.models.web.response.ResponseWrapperBuilder;
 import com.xtremealex.aeroport.service.IAirportTypeService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
+@Tag(name = "Search Airport Type", description = "tipologie di aeroporti")
 public class SearchAirportType {
 
     @Autowired

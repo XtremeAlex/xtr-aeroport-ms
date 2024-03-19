@@ -2,6 +2,7 @@ package com.xtremealex.aeroport.controller;
 
 import com.xtremealex.aeroport.models.web.ErrorCode;
 import com.xtremealex.aeroport.models.web.response.ResponseWrapperBuilder;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
+@Tag(name = "Search Countries", description = "cerca il paese preferito")
 public class SearchCountries {
 
     //@Autowired
