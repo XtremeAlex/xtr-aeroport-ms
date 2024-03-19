@@ -54,13 +54,17 @@ xtr-aeroport:
     pagination:
       maxPageSize: 48
 
+# http://127.0.0.1:8080/xtr-aeroport/v3/swagger-ui/index.html
+# http://127.0.0.1:8080/xtr-aeroport/v3/api-docs/swagger-config
+# http://127.0.0.1:8080/xtr-aeroport/v3/api-docs
 springdoc:
+  base: /v3
   swagger-ui:
-    path: /swagger-ui/index.html
-    tryItOutEnabled: true
+    path: ${springdoc.base}/swagger-ui.html
+    tryItOutEnabled: false
     filter: true
   api-docs:
-    path: /v3/api-docs
+    path: ${springdoc.base}/api-docs
   openapi:
-    dev-url: http://localhost:8080
-    prod-url: https://bubume.it
+    dev-url: http://localhost:${server.port}${server.servlet.context-path}
+    prod-url: https://bubume.it${server.servlet.context-path}
