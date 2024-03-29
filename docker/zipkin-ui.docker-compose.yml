@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  zipkin-ui:
+    image: openzipkin/zipkin-ui
+    container_name: zipkin-ui
+    environment:
+      - ZIPKIN_BASE_URL=http://localhost:9411
+    ports:
+      - 80:80

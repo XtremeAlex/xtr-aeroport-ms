@@ -6,6 +6,7 @@ import com.xtremealex.aeroport.models.web.response.ResponseWrapperBuilder;
 import com.xtremealex.aeroport.models.web.response.airports.AirportTypeDTO;
 import com.xtremealex.aeroport.service.IAirportTypeService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,7 +32,6 @@ public class SearchAirportType {
 
     @GetMapping("/getAllAirportTypes")
     public ResponseEntity<ResponseWrapper<Page<AirportTypeDTO>>> getAirportsZero() {
-
         try {
 
             Page page = airportService.getAll(creaPaginazione(0, 12, null, "name"));

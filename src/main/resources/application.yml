@@ -2,7 +2,10 @@ server:
   servlet:
     context-path: /xtr-aeroport
   port: 8080
+
 spring:
+  application:
+    name: xtr-aeroport-ms
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
@@ -49,6 +52,17 @@ spring:
       mode: always
       encoding: UTF-8
 
+
+management:
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+zipkin:
+  tracing:
+      endpoint: http://127.0.0.1:9411/
+#  sleuth:
+
 xtr-aeroport:
   db:
     pagination:
@@ -77,14 +91,16 @@ springdoc:
 logging:
   pattern:
     dateformat: ${LOG_DATE_FORMAT:yyyy-MM-ddTHH:mm:ss}
-    level: ${LOG_FORMAT:${spring.application.name} %clr(%5p) %clr([%X{traceId}/%X{spanId}]){yellow}}
+#    level: ${LOG_FORMAT:${spring.application.name} %clr(%5p) %clr([%X{traceId}/%X{spanId}]){yellow}}
+    level: ${LOG_FORMAT:${spring.application.name} }
   file:
     path: ${LOGGING_PATH:./var/log/spring}
     name: ${LOGGING_NAME:${logging.file.path}/${spring.application.name}.log}
   level:
+#    org.springframework.web.servlet: TRACE
     org.springframework.web: ${LOGGING_LEVEL:INFO}
-    it.mef.psrl.revisori: ${LOGGING_LEVEL:INFO}
   logback:
     rollingpolicy:
       max-history: ${LOGGING_HISTORY:5}
       max-file-size: ${LOGGING_MAX_SIZE:10MB}
+

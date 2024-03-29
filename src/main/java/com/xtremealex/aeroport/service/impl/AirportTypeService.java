@@ -5,11 +5,13 @@ import com.xtremealex.aeroport.entity.typological.AirportTypeTypology;
 import com.xtremealex.aeroport.mapper.IAirportTypeTypologyMapper;
 import com.xtremealex.aeroport.repository.AirportTypeRepository;
 import com.xtremealex.aeroport.service.IAirportTypeService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class AirportTypeService implements IAirportTypeService {
 
@@ -21,8 +23,8 @@ public class AirportTypeService implements IAirportTypeService {
 
     @Override
     public Page<AirportTypeDTO> getAll(Pageable pageable) {
-
         Page<AirportTypeTypology> page = airportTypeRepository.findAll(pageable);
+        log.info("return getAll...");
         return airportTypeTypologyMapper.entityPageToDtoPage(page, page.getPageable());
     }
 }
