@@ -12,7 +12,7 @@
 
     <groupId>com.xtremealex</groupId>
     <artifactId>aeroport</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
     <name>xtr-aeroport-ms</name>
     <description>Aeroport MS Graal project for Spring Boot</description>
 
