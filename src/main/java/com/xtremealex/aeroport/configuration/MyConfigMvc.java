@@ -1,13 +1,14 @@
 package com.xtremealex.aeroport.configuration;
 
 
+import com.xtremealex.aeroport.interceptors.MyLoggingInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.*;
 
 @Configuration
 @EnableWebMvc
-public class MyConfigMvc extends WebMvcConfigurationSupport {
+public class MyConfigMvc implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -32,5 +33,15 @@ public class MyConfigMvc extends WebMvcConfigurationSupport {
         corsRegistration.maxAge(0L);
     }
 
+    //Registrazione dell'interceptor affinché sia effettivamente invocato per ogni richiesta.
+    @Bean
+    public MyLoggingInterceptor myloggingInterceptor() {
+       return new MyLoggingInterceptor();
+    }
 
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        InterceptorRegistration interceptorRegistration = registry.addInterceptor(myloggingInterceptor());
+        interceptorRegistration.addPathPatterns("/*").excludePathPatterns("/css/**", "/js/**", "/v3/**");
+    }
 }

@@ -42,7 +42,7 @@ spring:
 
   h2:
     console:
-      enabled: true
+      enabled: false
 
   sql:
     init:
@@ -70,6 +70,21 @@ springdoc:
   openapi:
     dev-url: http://localhost:${server.port}${server.servlet.context-path}
     prod-url: https://bubume.it${server.servlet.context-path}
-    mail: alexdabi92@live.com
+    mail: xxx@xxx.com
     name: Alexandru Andrei Dabija
     url: https://bubume.it
+
+logging:
+  pattern:
+    dateformat: ${LOG_DATE_FORMAT:yyyy-MM-ddTHH:mm:ss}
+    level: ${LOG_FORMAT:${spring.application.name} %clr(%5p) %clr([%X{traceId}/%X{spanId}]){yellow}}
+  file:
+    path: ${LOGGING_PATH:./var/log/spring}
+    name: ${LOGGING_NAME:${logging.file.path}/${spring.application.name}.log}
+  level:
+    org.springframework.web: ${LOGGING_LEVEL:INFO}
+    it.mef.psrl.revisori: ${LOGGING_LEVEL:INFO}
+  logback:
+    rollingpolicy:
+      max-history: ${LOGGING_HISTORY:5}
+      max-file-size: ${LOGGING_MAX_SIZE:10MB}
