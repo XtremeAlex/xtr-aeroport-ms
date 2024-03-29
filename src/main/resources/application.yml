@@ -91,8 +91,8 @@ springdoc:
 logging:
   pattern:
     dateformat: ${LOG_DATE_FORMAT:yyyy-MM-ddTHH:mm:ss}
-#    level: ${LOG_FORMAT:${spring.application.name} %clr(%5p) %clr([%X{traceId}/%X{spanId}]){yellow}}
-    level: ${LOG_FORMAT:}
+#    level: ${LOG_LEVEL:}
+#    console:  ${LOG_FORMAT:${spring.application.name} %clr(%5p) %clr([%X{traceId}/%X{spanId}]){yellow}}
   file:
     path: ${LOGGING_PATH:./var/log/spring}
     name: ${LOGGING_NAME:${logging.file.path}/${spring.application.name}.log}
