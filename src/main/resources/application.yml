@@ -58,9 +58,9 @@ management:
     enabled: true
     sampling:
       probability: 1.0
-  zipkin:
-    tracing:
-      endpoint: http://127.0.0.1:9411/
+ # zipkin:
+#    tracing:
+#      endpoint: http://127.0.0.1:9411/
 #  sleuth:
 
 xtr-aeroport:
@@ -92,7 +92,7 @@ logging:
   pattern:
     dateformat: ${LOG_DATE_FORMAT:yyyy-MM-ddTHH:mm:ss}
 #    level: ${LOG_FORMAT:${spring.application.name} %clr(%5p) %clr([%X{traceId}/%X{spanId}]){yellow}}
-    level: ${LOG_FORMAT:${spring.application.name} }
+    level: ${LOG_FORMAT:}
   file:
     path: ${LOGGING_PATH:./var/log/spring}
     name: ${LOGGING_NAME:${logging.file.path}/${spring.application.name}.log}
