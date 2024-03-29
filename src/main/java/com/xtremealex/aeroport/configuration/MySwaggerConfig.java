@@ -17,6 +17,15 @@ public class MySwaggerConfig {
     private String devUrl;
     @Value("${springdoc.openapi.prod-url}")
     private String prodUrl;
+
+    @Value("${springdoc.openapi.mail}")
+    private String mail;
+
+    @Value("${springdoc.openapi.name}")
+    private String name;
+
+    @Value("${springdoc.openapi.url}")
+    private String url;
     @Bean
     public OpenAPI gateWayOpenApi() {
         Server devServer = new Server();
@@ -28,9 +37,9 @@ public class MySwaggerConfig {
         prodServer.setDescription("Server URL in PROD");
 
         Contact contact = new Contact();
-        contact.setEmail("alexdabi92@gmail.com");
-        contact.setName("Andrei Alexandru Dabija");
-        contact.setUrl("https://bubume.it");
+        contact.setEmail(mail);
+        contact.setName(name);
+        contact.setUrl(url);
 
         License mitLicense = new License().name("Apache 2.0 License").url("http://www.apache.org/licenses/");
 
@@ -38,7 +47,7 @@ public class MySwaggerConfig {
                 .title("API Aeroport")
                 .version("1.0.0")
                 .contact(contact)
-                .description("API Airports").termsOfService("https://bubume.it")
+                .description("API Airports").termsOfService(url)
                 .license(mitLicense);
 
         return new OpenAPI().info(info).servers(List.of(devServer, prodServer));

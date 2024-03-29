@@ -70,3 +70,6 @@ springdoc:
   openapi:
     dev-url: http://localhost:${server.port}${server.servlet.context-path}
     prod-url: https://bubume.it${server.servlet.context-path}
+    mail: alexdabi92@live.com
+    name: Alexandru Andrei Dabija
+    url: https://bubume.it

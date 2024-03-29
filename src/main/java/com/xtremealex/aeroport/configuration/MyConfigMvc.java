@@ -1,6 +1,7 @@
 package com.xtremealex.aeroport.configuration;
 
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.*;
 
@@ -19,15 +20,17 @@ public class MyConfigMvc extends WebMvcConfigurationSupport {
         }
     }
 
+    //http://localhost:8080/xtr-aeroport/v3/swagger-ui/index.html
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         CorsRegistration corsRegistration = registry.addMapping("*");
-        corsRegistration.allowedHeaders("*");
-        corsRegistration.allowedMethods("*");
         corsRegistration.allowedOrigins("*");
+        corsRegistration.allowedHeaders("*");
+        corsRegistration.allowedMethods("GET, POST, PUT, DELETE, OPTIONS");
         corsRegistration.allowCredentials(false);
         corsRegistration.exposedHeaders("*");
         corsRegistration.maxAge(0L);
     }
+
 
 }

@@ -1,7 +1,9 @@
 package com.xtremealex.aeroport.controller;
 
 import com.xtremealex.aeroport.models.web.ErrorCode;
+import com.xtremealex.aeroport.models.web.response.ResponseWrapper;
 import com.xtremealex.aeroport.models.web.response.ResponseWrapperBuilder;
+import com.xtremealex.aeroport.models.web.response.airports.AirportTypeDTO;
 import com.xtremealex.aeroport.service.IAirportTypeService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +17,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-@Tag(name = "Search Airport Type", description = "tipologie di aeroporti")
+@RestController
+@Tag(name = "Search Airport Type", description = "Tipologie di aeroporti")
 public class SearchAirportType {
 
     @Autowired
@@ -26,9 +29,8 @@ public class SearchAirportType {
     @Autowired
     private ResponseWrapperBuilder responseWrapperBuilder;
 
-
     @GetMapping("/getAllAirportTypes")
-    public ResponseEntity<?> getAirportsZero() {
+    public ResponseEntity<ResponseWrapper<Page<AirportTypeDTO>>> getAirportsZero() {
 
         try {
 
@@ -41,12 +43,13 @@ public class SearchAirportType {
             return returnResults(page, null);
 
         } catch (Exception e) {
-            return returnError(e, null);
+            return new ResponseEntity<>(responseWrapperBuilder.buildResponse(ErrorCode.E0, null, e.getMessage()), null, HttpStatus.INTERNAL_SERVER_ERROR);
+
         }
     }
 
     @GetMapping("/getAllAirportType/{pageNumber}/{pageSize}/{sortField}/{sortDir}")
-    public ResponseEntity<?> getAirports(@PathVariable Integer pageNumber,
+    public ResponseEntity<ResponseWrapper<Page<AirportTypeDTO>>> getAirports(@PathVariable Integer pageNumber,
                                          @PathVariable Integer pageSize,
                                          @PathVariable String sortField,
                                          @PathVariable String sortDir) {
@@ -62,12 +65,13 @@ public class SearchAirportType {
             return returnResults(page, null);
 
         } catch (Exception e) {
-            return returnError(e, null);
+            //return returnError(e, null);
+            return new ResponseEntity<>(responseWrapperBuilder.buildResponse(ErrorCode.E0, null, e.getMessage()), null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/getAllAirportType")
-    public ResponseEntity<?> getAirports2(@RequestParam(defaultValue = "0") Integer pageNumber,
+    public ResponseEntity<ResponseWrapper<Page<AirportTypeDTO>>> getAirports2(@RequestParam(defaultValue = "0") Integer pageNumber,
                                           @RequestParam(defaultValue = "12") Integer pageSize,
                                           @RequestParam(required = false) String sortField,
                                           @RequestParam(defaultValue = "ASC") String sortDir) {
@@ -83,7 +87,7 @@ public class SearchAirportType {
             return returnResults(page, null);
 
         } catch (Exception e) {
-            return returnError(e, null);
+            return new ResponseEntity<>(responseWrapperBuilder.buildResponse(ErrorCode.E0, null, e.getMessage()), null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -100,11 +104,11 @@ public class SearchAirportType {
     }
 
 
-    private ResponseEntity<?> returnError(Exception e, Object searchParams) {
+    private ResponseEntity<ResponseWrapper<Page<AirportTypeDTO>>> returnError(Exception e, Object searchParams) {
         return new ResponseEntity<>(responseWrapperBuilder.buildResponse(ErrorCode.E0, searchParams, e.getMessage()), null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private ResponseEntity<?> returnResults(Page<Object> airports, Object searchParams) {
+    private ResponseEntity<ResponseWrapper<Page<AirportTypeDTO>>> returnResults(Page<Object> airports, Object searchParams) {
         if (airports == null || airports.isEmpty()) {
             return new ResponseEntity<>(responseWrapperBuilder.buildResponse(ErrorCode.E1, searchParams, "Nessun aeroporto trovato"), null, HttpStatus.OK);
         }

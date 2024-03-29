@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Set;
 
 @RestController
-@Tag(name = "Search Airport", description = "cerca il tuo aeroporto preferito")
+@Tag(name = "Search Airport", description = "Cerca il tuo aeroporto preferito")
 public class SearchAirport {
 
     @Autowired
@@ -28,7 +28,6 @@ public class SearchAirport {
 
     @Autowired
     private ResponseWrapperBuilder responseWrapperBuilder;
-
 
     @Value("${xtr-aeroport.db.pagination.maxPageSize}")
     private Integer MAX_PAGE_SIZE;
@@ -41,7 +40,7 @@ public class SearchAirport {
                                                                            @RequestParam(required = false) String name,
                                                                            @RequestParam(defaultValue = "0") int pageNumber,
                                                                            @RequestParam(defaultValue = "12") int pageSize,
-                                                                           @RequestParam(required = false) String sortField,
+                                                                           @RequestParam(defaultValue = "name", required = false) String sortField,
                                                                            @RequestParam(defaultValue = "ASC") String sortDir) {
 
         // Questa è una chicca, serve per avere a video un evvidenza dei filtri in entrata usati per la ricerca, in piu lo uso per snellire il codices

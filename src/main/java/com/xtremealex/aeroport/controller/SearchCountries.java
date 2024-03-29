@@ -13,9 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-@Tag(name = "Search Countries", description = "cerca il paese preferito")
+@RestController
+@Tag(name = "Search Countries", description = "Cerca il paese preferito")
 public class SearchCountries {
 
     //@Autowired
