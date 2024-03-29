@@ -54,13 +54,18 @@ spring:
 
 
 management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+  otlp:
+    tracing:
+      endpoint: http://127.0.0.1:4318/v1/traces
+
   tracing:
-    enabled: true
     sampling:
       probability: 1.0
-zipkin:
-  tracing:
-      endpoint: http://127.0.0.1:9411/
 #  sleuth:
 
 xtr-aeroport:
