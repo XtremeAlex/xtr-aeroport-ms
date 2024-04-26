@@ -99,6 +99,7 @@ logging:
   level:
 #    org.springframework.web.servlet: TRACE
     org.springframework.web: ${LOGGING_LEVEL:INFO}
+#    org.springframework.cloud.gateway: DEBUG
   logback:
     rollingpolicy:
       max-history: ${LOGGING_HISTORY:5}
