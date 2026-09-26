@@ -2,9 +2,10 @@
 
 Microservizio Spring Boot per l'accesso alle informazioni su aeroporti e rotte aeree, con supporto alla compilazione nativa GraalVM.
 
-## Stack
+## Stack tecnologico
 
-- Java 17, Spring Boot 3
+- Java 17 (GraalVM)
+- Spring Boot 3.2.1
 - GraalVM native image
 - Maven
 
