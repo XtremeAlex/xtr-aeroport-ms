@@ -6,6 +6,7 @@ import com.xtremealex.aeroport.mapper.IAirportMapper;
 import com.xtremealex.aeroport.repository.AirportRepository;
 import com.xtremealex.aeroport.service.IAirportService;
 import com.xtremealex.aeroport.utility.StringConverter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,12 +15,17 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Implementazione dei servizi di ricerca aeroporti. Delega le query al
+ * {@link AirportRepository} e mappa le entita verso i DTO con {@link IAirportMapper}.
+ */
 @Service
+@Slf4j
 public class AirportService implements IAirportService {
 
     @Autowired
-    IAirportMapper airportMapper;
-    
+    private IAirportMapper airportMapper;
+
     @Autowired
     private AirportRepository airportRepository;
 
@@ -83,22 +89,24 @@ public class AirportService implements IAirportService {
         return airportMapper.entityPageToDtoPage(page, page.getPageable());
     }
 
+    /**
+     * Converte un insieme di identificativi di tipologia da String a Long.
+     *
+     * @param airportTypeString identificativi come stringa (possono essere null)
+     * @return insieme di id numerici; vuoto se l'input e null
+     * @throws IllegalArgumentException se un identificativo non e numerico
+     */
     public Set<Long> convertiSetStringInLong(Set<String> airportTypeString) {
-
         Set<Long> airportTypeIds = new HashSet<>();
         if (airportTypeString != null) {
             for (String typeStr : airportTypeString) {
                 try {
-                    long typeId = stringConverter.setId(typeStr.trim());
-                    //long typeId = Long.parseLong(typeStr.trim());
-
-                    airportTypeIds.add(typeId);
+                    airportTypeIds.add(stringConverter.setId(typeStr.trim()));
                 } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("Il tipo di aeroporto fornito non è valido: " + typeStr);
+                    throw new IllegalArgumentException("Il tipo di aeroporto fornito non e valido: " + typeStr, e);
                 }
             }
         }
-
         return airportTypeIds;
     }
 

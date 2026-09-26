@@ -7,6 +7,7 @@ import com.xtremealex.aeroport.models.web.response.ResponseWrapperBuilder;
 import com.xtremealex.aeroport.models.web.response.airports.AirportDTO;
 import com.xtremealex.aeroport.service.IAirportService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -15,13 +16,26 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Set;
 
+/**
+ * Ricerca degli aeroporti con filtri combinabili (tipologie, paese ISO, nome)
+ * e paginazione/ordinamento. La dimensione di pagina e limitata lato server per
+ * proteggere microservizio e database.
+ */
 @RestController
 @Tag(name = "Search Airport", description = "Cerca il tuo aeroporto preferito")
+@Slf4j
 public class SearchAirport {
+
+    /** Lunghezza minima del filtro per nome, per evitare ricerche troppo ampie. */
+    private static final int MIN_NAME_LENGTH = 3;
 
     @Autowired
     private IAirportService airportService;
@@ -29,11 +43,14 @@ public class SearchAirport {
     @Autowired
     private ResponseWrapperBuilder responseWrapperBuilder;
 
+    /** Dimensione massima di pagina consentita (da configurazione). */
     @Value("${xtr-aeroport.db.pagination.maxPageSize}")
-    private Integer MAX_PAGE_SIZE;
+    private Integer maxPageSize;
 
-    //http://localhost:8080/xtr-aeroport/getAirport?types=1,2,3,4,5,6,7,8&isoCountry=IT&pageNumber=4&pageSize=1000&sortField=name
-
+    /**
+     * Ricerca via query string. Esempio:
+     * {@code /getAirportsBy?types=1,2&isoCountry=IT&pageNumber=0&pageSize=12&sortField=name}
+     */
     @GetMapping("/getAirportsBy")
     public ResponseEntity<ResponseWrapper<Page<AirportDTO>>> getAirportsBy(@RequestParam(required = false) Set<String> types,
                                                                            @RequestParam(required = false) String isoCountry,
@@ -43,51 +60,55 @@ public class SearchAirport {
                                                                            @RequestParam(defaultValue = "name", required = false) String sortField,
                                                                            @RequestParam(defaultValue = "ASC") String sortDir) {
 
-        // Questa è una chicca, serve per avere a video un evvidenza dei filtri in entrata usati per la ricerca, in piu lo uso per snellire il codices
         AirportSearchRequest filtriInput = new AirportSearchRequest(types, isoCountry, name, pageNumber, pageSize, sortField, sortDir);
-
         return genericSearchAirports(filtriInput);
     }
 
-    //TODO: Da testare non testato :(
+    /**
+     * Ricerca via corpo JSON, equivalente a {@link #getAirportsBy}.
+     */
     @PostMapping("/searchAirports")
     public ResponseEntity<ResponseWrapper<Page<AirportDTO>>> searchAirports(@RequestBody AirportSearchRequest searchRequest) {
         return genericSearchAirports(searchRequest);
     }
 
+    /**
+     * Flusso di ricerca comune: normalizza la dimensione di pagina, valida il
+     * filtro per nome, costruisce la paginazione ed esegue la query.
+     */
     public ResponseEntity genericSearchAirports(AirportSearchRequest searchRequest) {
         try {
+            // Limita la dimensione di pagina al massimo consentito, a protezione di MS e DB.
+            searchRequest.setPageSize(Math.min(searchRequest.getPageSize(), maxPageSize));
 
-            //Se sei furbo ti sego le gambe cosi ;)
-            searchRequest.setPageSize(Math.min(searchRequest.getPageSize(), MAX_PAGE_SIZE));
-
-            //TODO: Controllo superfluo
-            //searchRequest.setPageNumber(searchRequest.getName() != null && !searchRequest.getName().isBlank() && searchRequest.getPageNumber() == 1 ? 0 : searchRequest.getPageNumber());
-
-            if (searchRequest.getName() != null && searchRequest.getName().length() < 3) {
-                throw new IllegalArgumentException("La ricerca richiede almeno 3 caratteri nella ricerca del nome. ");
+            if (searchRequest.getName() != null && searchRequest.getName().length() < MIN_NAME_LENGTH) {
+                throw new IllegalArgumentException(
+                        "La ricerca per nome richiede almeno " + MIN_NAME_LENGTH + " caratteri.");
             }
 
-            // Inserisco un max size prima che qualcuno tiri giù il ms oppure il db,
-            // se cerchi 9999 perche si furbo ti metto 48 come indicato sulle props ;)
-            searchRequest.setPageSize(Math.min(searchRequest.getPageSize(), MAX_PAGE_SIZE));
+            Pageable pageable = creaPaginazione(searchRequest.getPageNumber(), searchRequest.getPageSize(),
+                    searchRequest.getSortField(), searchRequest.getSortDir());
 
-            Pageable pageable = creaPaginazione(searchRequest.getPageNumber(), searchRequest.getPageSize(), searchRequest.getSortField(), searchRequest.getSortDir());
+            Page<AirportDTO> airports = search(searchRequest.getTypes(), searchRequest.getIsoCountry(),
+                    searchRequest.getName(), pageable);
 
-            Page<AirportDTO> airports = search(searchRequest.getTypes(), searchRequest.getIsoCountry(), searchRequest.getName(), pageable);
             if (airports == null || airports.isEmpty()) {
+                log.debug("Nessun aeroporto trovato per i filtri: {}", searchRequest);
                 return new ResponseEntity(responseWrapperBuilder.buildResponse(ErrorCode.E1, searchRequest, "Nessun aeroporto trovato"), null, HttpStatus.NOT_FOUND);
             }
 
             return returnResults(airports, searchRequest);
 
         } catch (Exception e) {
+            log.error("Errore durante la ricerca aeroporti per i filtri {}: {}", searchRequest, e.getMessage(), e);
             return returnError(e, searchRequest);
         }
     }
 
-    //Ottimizzazione del codice, altrimenti Sonar sta a sirene spiegate,
-    //Per far vedere tutti i casi d'uso ho estremizzato l'esempio
+    /**
+     * Seleziona la query di ricerca in base alla combinazione di filtri valorizzati.
+     * Ogni ramo copre un caso d'uso distinto (nome, tipologie, paese e loro combinazioni).
+     */
     private Page<AirportDTO> search(Set<String> types, String isoCountry, String name, Pageable pageable) {
         if (name != null && !name.isBlank()) {
             if (types != null && isoCountry != null) {
@@ -110,21 +131,27 @@ public class SearchAirport {
         }
     }
 
+    /**
+     * Costruisce l'oggetto di paginazione, applicando l'ordinamento se richiesto.
+     */
     private Pageable creaPaginazione(int pageNumber, int pageSize, String sortField, String sortDir) {
-        Pageable pageable;
         if (sortField != null && !sortField.isEmpty()) {
             Sort sort = Sort.by(Sort.Direction.fromString(sortDir), sortField);
-            pageable = PageRequest.of(pageNumber, pageSize, sort);
-        } else {
-            pageable = PageRequest.of(pageNumber, pageSize);
+            return PageRequest.of(pageNumber, pageSize, sort);
         }
-        return pageable;
+        return PageRequest.of(pageNumber, pageSize);
     }
 
+    /**
+     * Costruisce la risposta di errore (HTTP 500) con codice {@link ErrorCode#E0}.
+     */
     private ResponseEntity returnError(Exception e, Object searchParams) {
         return new ResponseEntity<>(responseWrapperBuilder.buildResponse(ErrorCode.E0, searchParams, e.getMessage()), null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    /**
+     * Costruisce la risposta di successo (HTTP 200) con codice {@link ErrorCode#E1}.
+     */
     private ResponseEntity returnResults(Page<AirportDTO> airports, AirportSearchRequest searchParams) {
         if (airports == null || airports.isEmpty()) {
             return new ResponseEntity(responseWrapperBuilder.buildResponse(ErrorCode.E1, searchParams, "Nessun aeroporto trovato"), null, HttpStatus.OK);
