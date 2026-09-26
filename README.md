@@ -66,7 +66,7 @@ manutenibilità.
 |---|---|
 | [`xtr-aeroport-ms`](https://github.com/XtremeAlex/xtr-aeroport-ms) | Microservizio di ricerca aeroporti (questo repo) |
 | [`xtr-aeroport-batch`](https://github.com/XtremeAlex/xtr-aeroport-batch) | Import massivo dati (Spring Batch + GraalVM native) |
-| [`xtr-aeroport-typological`](https://github.com/XtremeAlex/xtr-aeroport-typological) | Servizio dati tipologici |
+| [`xtr-aeroport-typology`](https://github.com/XtremeAlex/xtr-aeroport-typology) | Servizio dati tipologici |
 | [`xtr-aeroport-common-lib`](https://github.com/XtremeAlex/xtr-aeroport-common-lib) | Libreria condivisa |
 | [`xtr-aeroport-web-java`](https://github.com/XtremeAlex/xtr-aeroport-web-java) | Frontend web |
 
@@ -106,7 +106,7 @@ Java 17 e può essere avviato e testato in locale.
 - GraalVM JDK 17 (per la build nativa) oppure un JDK 17 qualsiasi (per la build JVM)
 - Maven (>= 3.9.6) — oppure il wrapper `./mvnw` incluso
 - Docker (per il database e le build containerizzate)
-- Il servizio [`xtr-aeroport-typological`](https://github.com/XtremeAlex/xtr-aeroport-typological) in esecuzione, per gli endpoint delle tipologie (via Feign)
+- Il servizio [`xtr-aeroport-typology`](https://github.com/XtremeAlex/xtr-aeroport-typology) in esecuzione, per gli endpoint delle tipologie (via Feign)
 
 ### Coordinate del progetto
 
