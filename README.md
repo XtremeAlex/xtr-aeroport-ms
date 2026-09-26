@@ -32,7 +32,7 @@ Fa parte della suite `xtr-aeroport-*`, un esempio di architettura a microservizi
 
 ## License
 
-Distribuito sotto licenza Apache 2.0. Vedi `LICENSE`.
+Distribuito con doppia licenza: **GNU AGPL-3.0** (vedi [`LICENSE`](LICENSE)) per uso open source, e **licenza commerciale** per uso in prodotti proprietari (vedi [`COMMERCIAL-LICENSE.md`](COMMERCIAL-LICENSE.md)).
 
 ## Contatti
 
