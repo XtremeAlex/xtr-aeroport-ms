@@ -1,6 +1,9 @@
+> Stato: deprecato dal 29/09/2026. Questo progetto non è più mantenuto.
+> Al suo posto c'è `xtr-aeroport-api-spring`, l'API unica della suite (non ancora pubblicata su GitHub), che ha assorbito anche `xtr-aeroport-typology`.
+> Il codice resta qui per chi vuole consultarlo, ma non riceverà più correzioni, aggiornamenti di sicurezza o nuove release.
+
 <a name="readme-top"></a>
 
-<!-- PROJECT LOGO -->
 <br />
 <div align="center">
   <img src="_assets/images/banner-dark.png" alt="Aeroport MS" width="100%">
@@ -10,7 +13,7 @@
   <h3 align="center">Aeroport MS</h3>
 
   <p align="center">
-    Microservizio dedicato all'accesso alle informazioni sugli aeroporti di tutto il mondo.
+    Il microservizio per cercare informazioni sugli aeroporti di tutto il mondo.
     <br />
     <a href="https://github.com/XtremeAlex/xtr-aeroport-ms"><strong>Esplora la documentazione &raquo;</strong></a>
     <br />
@@ -21,21 +24,21 @@
   </p>
 </div>
 
-<!-- SOMMARIO -->
 <details>
   <summary>Sommario</summary>
   <ol>
     <li>
-      <a href="#info-sul-progetto">Info sul progetto</a>
+      <a href="#perché-esiste">Perché esiste</a>
       <ul>
+        <li><a href="#la-suite">La suite</a></li>
         <li><a href="#invito-alla-collaborazione">Invito alla collaborazione</a></li>
         <li><a href="#stack-tecnologico">Stack tecnologico</a></li>
       </ul>
     </li>
     <li>
-      <a href="#getting-started">Getting Started</a>
+      <a href="#per-iniziare">Per iniziare</a>
       <ul>
-        <li><a href="#prerequisiti">Prerequisiti</a></li>
+        <li><a href="#cosa-serve">Cosa serve</a></li>
         <li><a href="#struttura-del-progetto">Struttura del progetto</a></li>
         <li><a href="#compilazione">Compilazione</a></li>
       </ul>
@@ -44,69 +47,65 @@
     <li><a href="#play--test">Play &amp; Test</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#come-contribuire">Come contribuire</a></li>
-    <li><a href="#license">License</a></li>
+    <li><a href="#licenza">Licenza</a></li>
     <li><a href="#contatti">Contatti</a></li>
     <li><a href="#ringraziamenti">Ringraziamenti</a></li>
   </ol>
 </details>
 
-<!-- INFO SUL PROGETTO -->
-## Info sul progetto
+## Perché esiste
 
-`xtr-aeroport-ms` è un microservizio che espone API REST per cercare aeroporti nel
-mondo con filtri combinabili (tipologia, paese, nome), paginazione e ordinamento.
-Nasce come piattaforma sperimentale per testare pattern e tecnologie moderne
-(microservizi, cloud-native, GraalVM native) in un contesto realistico, ma è
-strutturato con un approccio "enterprise like": scalabilità, sicurezza e
-manutenibilità.
+`xtr-aeroport-ms` espone API REST per cercare aeroporti in tutto il mondo. I filtri (tipologia, paese, nome) si possono combinare, e ci sono paginazione e ordinamento. È nato come banco di prova personale per pattern e tecnologie recenti (microservizi, cloud-native, GraalVM native) su un caso concreto, ma l'ho impostato come un progetto aziendale: scalabile, sicuro, facile da mantenere.
 
-È uno dei moduli della suite `xtr-aeroport-*`:
+Perché l'ho deprecato: per le tipologie chiamava `xtr-aeroport-typology` via Feign. Voleva dire due JVM, una chiamata di rete in più e più cose che si potevano rompere. Sul Raspberry Pi, dove la suite deve girare, era troppo. I due servizi sono diventati uno solo, `xtr-aeroport-api-spring`, che usa un database SQLite di sola lettura al posto di PostgreSQL.
 
-| Modulo | Ruolo |
-|---|---|
-| [`xtr-aeroport-ms`](https://github.com/XtremeAlex/xtr-aeroport-ms) | Microservizio di ricerca aeroporti (questo repo) |
-| [`xtr-aeroport-batch`](https://github.com/XtremeAlex/xtr-aeroport-batch) | Import massivo dati (Spring Batch + GraalVM native) |
-| [`xtr-aeroport-typology`](https://github.com/XtremeAlex/xtr-aeroport-typology) | Servizio dati tipologici |
-| [`xtr-aeroport-common-lib`](https://github.com/XtremeAlex/xtr-aeroport-common-lib) | Libreria condivisa |
-| [`xtr-aeroport-web-java`](https://github.com/XtremeAlex/xtr-aeroport-web-java) | Frontend web |
+### La suite
+
+| Modulo | A cosa serve | Stato |
+|---|---|---|
+| `xtr-aeroport-api-spring` | API unica per aeroporti, tipologie, paesi e messaggi EDIFACT (non ancora pubblicata su GitHub) | Attivo |
+| `xtr-aeroport-api-quarkus` | Porting della stessa API su Quarkus (non ancora pubblicato su GitHub) | Sperimentale |
+| `xtr-aeroport-edifact-spring-web` | Console web EDIFACT, ha preso il posto di `xtr-aeroport-web-java` (non ancora pubblicata su GitHub) | Attivo |
+| [`xtr-aeroport-batch`](https://github.com/XtremeAlex/xtr-aeroport-batch) | Import massivo dei dati | Attivo, offline |
+| [`xtr-aeroport-common-lib`](https://github.com/XtremeAlex/xtr-aeroport-common-lib) | Libreria condivisa | Legacy |
+| [`xtr-aeroport-ms`](https://github.com/XtremeAlex/xtr-aeroport-ms) | Microservizio di ricerca aeroporti (questo modulo) | Deprecato |
+| [`xtr-aeroport-typology`](https://github.com/XtremeAlex/xtr-aeroport-typology) | Servizio dati tipologici | Deprecato |
+| [`xtr-aeroport-web-java`](https://github.com/XtremeAlex/xtr-aeroport-web-java) | Frontend web | Deprecato |
 
 ### Invito alla collaborazione
 
-Idee, codice e feedback sono benvenuti:
+Quando il progetto era vivo, l'invito era aperto a idee, codice e feedback. L'idea era:
 
-- **Sperimentare** con tecnologie e pattern moderni in un progetto concreto.
-- **Crescere insieme** scambiando idee e imparando gli uni dagli altri.
-- **Partire da una base** strutturata secondo le best practice per i propri sviluppi futuri.
+- **sperimentare** tecnologie e pattern recenti su un progetto vero;
+- **crescere insieme**, scambiandosi idee e imparando gli uni dagli altri;
+- **avere una base** già impostata secondo le buone pratiche da cui partire per i propri progetti.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+Oggi quell'invito vale per `xtr-aeroport-api-spring`.
 
 ### Stack tecnologico
 
 - Java 17 (GraalVM)
 - Spring Boot 3.2.1 (Web, Data JPA, Actuator)
-- Spring Cloud OpenFeign (comunicazione tra servizi)
+- Spring Cloud OpenFeign per la comunicazione tra servizi
 - PostgreSQL, HikariCP
 - MapStruct, Lombok
 - springdoc-openapi (Swagger UI)
 - Micrometer Tracing + OpenTelemetry / Zipkin
 - Docker, Helm / Kubernetes
-- Linux, macOS, Windows
+- Gira su Linux, macOS e Windows
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#readme-top">torna su</a>)</p>
 
-<!-- GETTING STARTED -->
-## Getting Started
+## Per iniziare
+Si compila con Maven, su Spring Boot 3 e Java 17, e si avvia senza problemi in locale.
 
-Il progetto usa Maven per dipendenze e build. È sviluppato con Spring Boot 3 e
-Java 17 e può essere avviato e testato in locale.
-
-### Prerequisiti
+### Cosa serve
 
 - Git (>= 2.43)
-- GraalVM JDK 17 (per la build nativa) oppure un JDK 17 qualsiasi (per la build JVM)
-- Maven (>= 3.9.6) — oppure il wrapper `./mvnw` incluso
-- Docker (per il database e le build containerizzate)
-- Il servizio [`xtr-aeroport-typology`](https://github.com/XtremeAlex/xtr-aeroport-typology) in esecuzione, per gli endpoint delle tipologie (via Feign)
+- GraalVM JDK 17 per la build nativa, oppure un qualsiasi JDK 17 per la build JVM
+- Maven (>= 3.9.6), oppure il wrapper `./mvnw` già incluso
+- Docker, per il database e per le build in container
+- [`xtr-aeroport-typology`](https://github.com/XtremeAlex/xtr-aeroport-typology) in esecuzione, se ti servono gli endpoint delle tipologie (passano da Feign)
 
 ### Coordinate del progetto
 
@@ -140,7 +139,7 @@ src/main/java/com/xtremealex/aeroport
     └── impl/AirportService.java    implementazione (query + mapping DTO)
 ```
 
-> Entity, DTO, mapper, repository e utility sono forniti dalla dipendenza
+> Entity, DTO, mapper, repository e utility arrivano dalla dipendenza
 > [`xtr-aeroport-common-lib`](https://github.com/XtremeAlex/xtr-aeroport-common-lib).
 
 ### Compilazione
@@ -163,9 +162,7 @@ java -jar ./target/aeroport-3.2.0.jar
 
 **3. Generare i metadati per la native image**
 
-La native image lavora a closed-world: reflection, proxy e risorse dinamiche vanno
-dichiarate a build time. Il `native-image-agent` li genera eseguendo il jar sulla
-JVM ed esercitando i vari percorsi dell'applicazione.
+La native image ragiona "a mondo chiuso": reflection, proxy e risorse dinamiche vanno dichiarati prima, in fase di build. Il `native-image-agent` li raccoglie da solo: si avvia il jar sulla JVM e si usano i vari percorsi dell'applicazione.
 
 ```bash
 java -agentlib:native-image-agent=config-output-dir=src/main/resources/META-INF/native-image \
@@ -181,9 +178,7 @@ java -agentlib:native-image-agent=config-output-dir=src/main/resources/META-INF/
 ./target/aeroport
 ```
 
-Note su ARM64 (Apple Silicon): `WriteableCodeCache` disabilitato, `--libc=musl`
-non supportato, Garbage Collector G1 non supportato
-([riferimento GraalVM](https://www.graalvm.org/reference-manual/native-image/)).
+Se sei su ARM64 (Apple Silicon): `WriteableCodeCache` va disabilitato, `--libc=musl` non è supportato e nemmeno il Garbage Collector G1 ([riferimento GraalVM](https://www.graalvm.org/reference-manual/native-image/)).
 
 **5. Build Docker (buildpacks)**
 
@@ -194,21 +189,19 @@ non supportato, Garbage Collector G1 non supportato
 ./mvnw package -DskipTests -Pdocker-x86
 ```
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#readme-top">torna su</a>)</p>
 
-<!-- API -->
 ## API
 
-Documentazione interattiva via Swagger UI una volta avviato il servizio:
-`/<context-path>/swagger-ui.html`.
+Una volta avviato il servizio, la documentazione interattiva è su Swagger UI: `/<context-path>/swagger-ui.html`.
 
 | Metodo | Endpoint | Descrizione |
 |---|---|---|
-| GET | `/getAirportsBy` | Ricerca aeroporti per query string (types, isoCountry, name, paginazione) |
+| GET | `/getAirportsBy` | Ricerca aeroporti via query string (types, isoCountry, name, paginazione) |
 | POST | `/searchAirports` | Ricerca aeroporti via corpo JSON (`AirportSearchRequest`) |
 | GET | `/getAllAirportTypes` | Tutte le tipologie di aeroporto |
-| GET | `/getAllAirportType/{pageNumber}/{pageSize}/{sortField}/{sortDir}` | Tipologie con paginazione (path variable) |
-| GET | `/getAllAirportType` | Tipologie con paginazione (request param) |
+| GET | `/getAllAirportType/{pageNumber}/{pageSize}/{sortField}/{sortDir}` | Tipologie paginate (path variable) |
+| GET | `/getAllAirportType` | Tipologie paginate (request param) |
 
 Esempio:
 
@@ -216,9 +209,8 @@ Esempio:
 GET /getAirportsBy?types=1,2&isoCountry=IT&pageNumber=0&pageSize=12&sortField=name&sortDir=ASC
 ```
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#readme-top">torna su</a>)</p>
 
-<!-- PLAY & TEST -->
 ## Play & Test
 
 ```bash
@@ -227,12 +219,13 @@ GET /getAirportsBy?types=1,2&isoCountry=IT&pageNumber=0&pageSize=12&sortField=na
 ```
 
 - Metriche Prometheus via Actuator: `/actuator/prometheus`
-- Tracing distribuito esportato verso Zipkin (Micrometer Tracing + OpenTelemetry)
+- Tracing distribuito inviato a Zipkin (Micrometer Tracing + OpenTelemetry)
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#readme-top">torna su</a>)</p>
 
-<!-- ROADMAP -->
 ## Roadmap
+
+Chiusa con la deprecazione. Le due voci aperte non verranno fatte qui.
 
 - [x] Ricerca aeroporti con filtri combinabili e paginazione
 - [x] Proxy tipologie via Feign
@@ -244,49 +237,40 @@ GET /getAirportsBy?types=1,2&isoCountry=IT&pageNumber=0&pageSize=12&sortField=na
 - [ ] Ricerca voli (`SearchFlights`)
 - [ ] Gestione errori centralizzata (`@RestControllerAdvice`)
 
-Consulta le [open issues](https://github.com/XtremeAlex/xtr-aeroport-ms/issues) per l'elenco completo.
+Le vecchie issue restano consultabili [qui](https://github.com/XtremeAlex/xtr-aeroport-ms/issues).
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#readme-top">torna su</a>)</p>
 
-<!-- CONTRIBUTING -->
 ## Come contribuire
 
-1. Fai un fork del progetto
-2. Crea il tuo feature branch (`git checkout -b feature/nome-feature`)
-3. Fai commit delle modifiche (`git commit -m "Aggiunge nome-feature"`)
-4. Fai push sul branch (`git push origin feature/nome-feature`)
-5. Apri una Pull Request
+Il progetto è deprecato, quindi aprire Pull Request qui ha poco senso. Se vuoi contribuire alla suite, il posto giusto è `xtr-aeroport-api-spring`. Per chi vuole comunque partire da qui con un fork, il giro è quello classico:
 
-Ogni contributo è molto apprezzato. E non dimenticare una stella al progetto!
+1. fai un fork del progetto;
+2. crea un branch per la tua modifica (`git checkout -b feature/nome-feature`);
+3. fai commit (`git commit -m "Aggiunge nome-feature"`);
+4. fai push del branch (`git push origin feature/nome-feature`).
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#readme-top">torna su</a>)</p>
 
-<!-- LICENSE -->
-## License
+## Licenza
+Doppia licenza:
 
-Distribuito con doppia licenza:
+- **GNU AGPL-3.0** (vedi [`LICENSE`](LICENSE)) per l'uso open source. Chi usa questo software, anche solo come servizio di rete, deve renderne disponibile il codice sorgente.
+- **Licenza commerciale** per l'uso dentro prodotti proprietari (vedi [`COMMERCIAL-LICENSE.md`](COMMERCIAL-LICENSE.md)). In ogni caso di riuso va mantenuta l'attribuzione all'autore.
 
-- **GNU AGPL-3.0** (vedi [`LICENSE`](LICENSE)) per uso open source. Chi usa questo
-  software, anche come servizio di rete, deve renderne disponibile il codice sorgente.
-- **Licenza commerciale** per l'uso in prodotti proprietari (vedi
-  [`COMMERCIAL-LICENSE.md`](COMMERCIAL-LICENSE.md)). Ogni riuso deve mantenere
-  l'attribuzione all'autore.
+<p align="right">(<a href="#readme-top">torna su</a>)</p>
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- CONTATTI -->
 ## Contatti
 
-Andrei Alexandru Dabija — [LinkedIn](https://www.linkedin.com/in/andrei-alexandru-dabija/) — [github.com/XtremeAlex](https://github.com/XtremeAlex)
+Andrei Alexandru Dabija · [LinkedIn](https://www.linkedin.com/in/andrei-alexandru-dabija/) · [github.com/XtremeAlex](https://github.com/XtremeAlex)
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#readme-top">torna su</a>)</p>
 
-<!-- RINGRAZIAMENTI -->
 ## Ringraziamenti
 
 - [Spring Boot](https://spring.io/projects/spring-boot) e [Spring Cloud OpenFeign](https://spring.io/projects/spring-cloud-openfeign)
 - [GraalVM](https://www.graalvm.org/) per la compilazione nativa
 - [springdoc-openapi](https://springdoc.org/) per la documentazione API
-- [Best-README-Template](https://github.com/othneildrew/Best-README-Template) come ispirazione per la struttura
+- [Best-README-Template](https://github.com/othneildrew/Best-README-Template), da cui ho preso spunto per la struttura
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#readme-top">torna su</a>)</p>
